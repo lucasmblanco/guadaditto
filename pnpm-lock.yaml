@@ -11,6 +11,9 @@ importers:
       '@tailwindcss/vite':
         specifier: ^4.0.3
         version: 4.0.3(vite@6.0.11(@types/node@22.13.1)(jiti@2.4.2)(lightningcss@1.29.1))
+      dexie:
+        specifier: ^4.0.11
+        version: 4.0.11
       lucide-svelte:
         specifier: ^0.474.0
         version: 0.474.0(svelte@5.19.7)
@@ -30,6 +33,9 @@ importers:
       svelte:
         specifier: ^5.15.0
         version: 5.19.7
+      svelte-awesome-icons:
+        specifier: ^2.0.1
+        version: 2.0.1(svelte@5.19.7)
       svelte-check:
         specifier: ^4.1.1
         version: 4.1.4(svelte@5.19.7)(typescript@5.6.3)
@@ -455,6 +461,9 @@ packages:
     engines: {node: '>=0.10'}
     hasBin: true
 
+  dexie@4.0.11:
+    resolution: {integrity: sha512-SOKO002EqlvBYYKQSew3iymBoN2EQ4BDw/3yprjh7kAfFzjBYkaMNa/pZvcA7HSWlcKSQb9XhPe3wKyQ0x4A8A==}
+
   enhanced-resolve@5.18.1:
     resolution: {integrity: sha512-ZSW3ma5GkcQBIpwZTSRAI8N71Uuwgs93IezB7mf7R60tC8ZbJideoDNKjHn2O9KIlx6rkGTTEk1xUCK2E1Y2Yg==}
     engines: {node: '>=10.13.0'}
@@ -607,6 +616,12 @@ packages:
   source-map-js@1.2.1:
     resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
     engines: {node: '>=0.10.0'}
+
+  svelte-awesome-icons@2.0.1:
+    resolution: {integrity: sha512-kz+44DXrdhZUjN0RBULpkBad7WBAp9Wvcb/VoTDsZC0uvDGF4crCX9SHqi0r7lTVqfhrVK7H70bz1RKAmlHqTA==}
+    engines: {node: '>=18.0.0', npm: '>=7.0.0'}
+    peerDependencies:
+      svelte: ^5.0.0 || ^5.0.0-next.1
 
   svelte-check@4.1.4:
     resolution: {integrity: sha512-v0j7yLbT29MezzaQJPEDwksybTE2Ups9rUxEXy92T06TiA0cbqcO8wAOwNUVkFW6B0hsYHA+oAX3BS8b/2oHtw==}
@@ -957,6 +972,8 @@ snapshots:
 
   detect-libc@1.0.3: {}
 
+  dexie@4.0.11: {}
+
   enhanced-resolve@5.18.1:
     dependencies:
       graceful-fs: 4.2.11
@@ -1112,6 +1129,10 @@ snapshots:
       mri: 1.2.0
 
   source-map-js@1.2.1: {}
+
+  svelte-awesome-icons@2.0.1(svelte@5.19.7):
+    dependencies:
+      svelte: 5.19.7
 
   svelte-check@4.1.4(svelte@5.19.7)(typescript@5.6.3):
     dependencies:

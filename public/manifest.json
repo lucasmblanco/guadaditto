@@ -5,5 +5,9 @@
   "description": "lorem ipsum",
   "action": {
     "default_popup": "index.html"
+  },
+  "permissions": ["storage", "activeTab"],
+  "background": {
+    "service_worker": "background.js"
   }
 }

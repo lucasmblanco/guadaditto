@@ -23,6 +23,10 @@ body {
   /* padding: 2rem; */
   text-align: center;
 }
+
+ul {
+  scrollbar-gutter: stable both-edges;
+}
 /* 
   
 

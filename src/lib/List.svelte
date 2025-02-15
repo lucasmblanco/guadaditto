@@ -3,19 +3,20 @@
   import { db } from "../background/background";
   import { YoutubeBrands } from "svelte-awesome-icons";
   import { ExternalLink, Trash2 } from "lucide-svelte";
+  import { flip } from "svelte/animate";
+  import { fade, slide } from "svelte/transition";
 
   let videos = liveQuery(() => db.videos.toArray());
-
-  // let arr = $state(Array(5).fill(null));
-  // function addRow() {
-  //   arr.push(null);
-  // }
 </script>
 
-<ul class="flex flex-col h-50 overflow-y-auto pe-3">
+<ul class="flex flex-col h-50 overflow-y-auto pe-3" transition:slide>
   {#if $videos}
     {#each $videos as video (video.id)}
-      <li class="flex items-center gap-2 text-xs">
+      <li
+        class="flex items-center gap-2 text-xs"
+        animate:flip
+        transition:fade={{ duration: 100 }}
+      >
         <YoutubeBrands class="basis-auto" />
         <span class="text-left truncate basis-full">{video.title}</span>
         <a href={video.url} target="_blank">

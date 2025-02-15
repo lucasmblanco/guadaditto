@@ -27,6 +27,10 @@ body {
 ul {
   scrollbar-gutter: stable both-edges;
 }
+
+.scrollbar-emoji {
+  scrollbar-gutter: stable both-edges;
+}
 /* 
   
 

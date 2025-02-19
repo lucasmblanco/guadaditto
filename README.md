@@ -7,3 +7,4 @@
 - [x] Add Folder list component
 - [ ] add "add button" from youtube ui
 - [ ] add sort button
+- [ ] add delete folder button

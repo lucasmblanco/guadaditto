@@ -3,7 +3,7 @@
   import emojiData from "./list.json";
   import { db } from "../background/background";
 
-  let { showEmojiOptions = $bindable() } = $props();
+  let { showEmojiOptions = $bindable(), handleScroll } = $props();
 
   let emojisCat = {};
   let activeCategory = $state("Smileys & Emotion");
@@ -25,29 +25,28 @@
       name: e.target.value,
       created_at: new Date(),
     });
+    handleScroll();
   }
 </script>
 
 <div class="h-52 relative" transition:slide>
-  <div class="grid grid-cols-11 overflow-y-auto items-center h-12">
+  <div class="grid grid-cols-11 overflow-y-auto items-center w-full h-12">
     {#each Object.keys(emojisCat) as category}
       <button
         onclick={() => setActiveCategory(category)}
-        class="rounded hover:bg-pink-400/50 active:bg-pink-400/80 text-lg"
+        class="h-10 w-10 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white has-[:checked]:bg-ditto-secondary"
       >
         {emojisCat[category][0].emoji}
       </button>
     {/each}
   </div>
-  <div
-    class="grid grid-cols-9 overflow-y-auto gap-[0.1rem] h-[calc(100%-3rem)]"
-  >
+  <div class="grid grid-cols-9 overflow-y-auto h-[calc(100%-3rem)] gap-[.1rem]">
     {#if activeCategory}
       {#each emojisCat[activeCategory] as emoji}
         <button
           onclick={createFolder}
           value={emoji.emoji}
-          class="bg-pink-400/50 rounded hover:bg-pink-400/70 active:bg-pink-400/90"
+          class="bg-ditto-secondary rounded hover:bg-ditto-secondary/50 active:bg-ditto-tertiary w-full h-8 self-center text-center"
           >{emoji.emoji}</button
         >
       {/each}

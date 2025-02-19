@@ -5,7 +5,7 @@ interface Video {
   title: string;
   url: string;
   created_at: Date;
-  folder_id: number;
+  folder_id: number | null;
 }
 
 interface Folder {

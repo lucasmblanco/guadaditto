@@ -1,5 +1,20 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: HankenGroteskExtraBoldItalic;
+  src: url("../static/fonts/HankenGrotesk-ExtraBoldItalic.ttf")
+    format("truetype");
+}
+
+@theme {
+  --color-ditto-primary: #c57be6;
+  --color-ditto-secondary: #9c5ab4;
+  --color-ditto-tertiary: #573265;
+  --color-ditto-bright: #e1bbf2;
+  --color-ditto-less-bright: #d7a5ee;
+  --font-main: "HankenGroteskExtraBoldItalic", sans-serif;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   font-synthesis: none;

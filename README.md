@@ -2,7 +2,8 @@
 
 - [x] Add IndexedDB
 - [x] Fix styling
-- [ ] Add url and title grabber, handle when changing windows
-- [ ] add emoji input for folder
-- [ ] Add Folder list component
+- [x] Add url and title grabber, handle when changing windows
+- [x] add emoji input for folder
+- [x] Add Folder list component
+- [ ] add "add button" from youtube ui
 - [ ] add sort button

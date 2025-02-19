@@ -5,6 +5,7 @@
 - [x] Add url and title grabber, handle when changing windows
 - [x] add emoji input for folder
 - [x] Add Folder list component
-- [ ] add "add button" from youtube ui
-- [ ] add sort button
 - [ ] add delete folder button
+- [ ] add "add button" from youtube ui
+- [ ] add empty message in list component
+- [ ] add sort button

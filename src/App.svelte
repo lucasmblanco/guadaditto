@@ -93,7 +93,9 @@
 <main
   class="bg-ditto-primary p-3 text-black w-[400px] border-1 border-ditto-bright pt-0"
 >
-  <h1 class="font-main text-2xl py-2 text-ditto-tertiary/50">guardaditto</h1>
+  <h1 class="font-main text-2xl py-2 text-ditto-tertiary/50 select-none">
+    guardaditto
+  </h1>
   <form class="flex gap-2 justify-between items-center" onsubmit={handleSubmit}>
     <input
       bind:value={url}

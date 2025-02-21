@@ -6,17 +6,17 @@
   import { flip } from "svelte/animate";
   import { fade, slide } from "svelte/transition";
 
-  let { selectedFolderId } = $props();
+  let { selectedFolder } = $props();
 
   let videos = $derived.by(() => {
-    if (selectedFolderId === null) {
+    if (selectedFolder.id === null) {
       return liveQuery(async () => {
         const allVideos = await db.videos.toArray();
         return allVideos.filter((video: any) => video.folder_id === null);
       });
     } else {
       return liveQuery(() =>
-        db.videos.where("folder_id").equals(selectedFolderId).toArray()
+        db.videos.where("folder_id").equals(selectedFolder.id).toArray()
       );
     }
   });

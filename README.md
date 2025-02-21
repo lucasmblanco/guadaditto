@@ -9,3 +9,4 @@
 - [ ] add "add button" from youtube ui
 - [ ] add empty message in list component
 - [ ] add sort button
+- [ ] add firefox support

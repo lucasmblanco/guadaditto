@@ -3,7 +3,7 @@
   import emojiData from "./list.json";
   import { db } from "../background/background";
 
-  let { showEmojiOptions = $bindable(), handleScroll } = $props();
+  let { showEmojiOptions = $bindable(), resize = $bindable() } = $props();
 
   let emojisCat = {};
   let activeCategory = $state("Smileys & Emotion");
@@ -25,7 +25,7 @@
       name: e.target.value,
       created_at: new Date(),
     });
-    handleScroll();
+    resize = true;
   }
 </script>
 

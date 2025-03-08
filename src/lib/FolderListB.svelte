@@ -5,6 +5,7 @@
     FolderPlus,
     ChevronLeft,
     ChevronRight,
+    Trash2,
   } from "lucide-svelte";
   import { db } from "../background/background";
   import { onMount } from "svelte";
@@ -14,6 +15,7 @@
   let showLeftGradient = $state(false);
   let showRightGradient = $state(false);
   let {
+    selectedFolder,
     selectFolder,
     showEmojiOptions = $bindable(),
     resize = $bindable(),
@@ -29,27 +31,6 @@
         showLeftGradient = Math.ceil(scrollLeft) > 0;
         showRightGradient =
           Math.ceil(scrollLeft) < scrollWidth - clientWidth - 1;
-      });
-    }
-  }
-
-  function handleRightScroll() {
-    if (scrollContainer) {
-      requestAnimationFrame(() => {
-        if (!scrollContainer) return;
-        const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
-        showRightGradient =
-          Math.ceil(scrollLeft) < scrollWidth - clientWidth - 1;
-      });
-    }
-  }
-
-  function handleLeftScroll() {
-    if (scrollContainer) {
-      requestAnimationFrame(() => {
-        if (!scrollContainer) return;
-        const { scrollLeft } = scrollContainer;
-        showLeftGradient = Math.ceil(scrollLeft) > 0;
       });
     }
   }
@@ -75,10 +56,6 @@
 
   $effect(() => {
     if (resize) {
-      // scrollContainer.scrollTo({
-      //   left: scrollContainer.scrollWidth,
-      //   behavior: "smooth",
-      // });
       handleScroll();
 
       resize = false;
@@ -92,14 +69,15 @@
 >
   <div class=" grid grid-flow-col gap-2 items-center min-w-0">
     <label
-      class="h-10 w-10 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white has-[:checked]:bg-ditto-secondary has-[:checked]:border-1 has-[:checked]:border-ditto-less-bright"
+      class="h-10 w-10 inline-flex items-center justify-center gap-2 border border-ditto-less-bright whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white has-[:checked]:bg-ditto-secondary has-[:checked]:border-1 has-[:checked]:border-ditto-less-bright"
       for="no_folder"
       ><input
-        checked
+        checked={selectedFolder.id === null}
         onclick={() => {
           selectFolder(null);
           showEmojiOptions = false;
         }}
+        defaultChecked={true}
         hidden
         type="radio"
         name="folder"
@@ -110,7 +88,7 @@
     {#if showLeftGradient}
       <button
         onclick={() => scroll("left")}
-        class=" bg-white rounded-full"
+        class=" bg-black/50 rounded-full text-white"
         aria-label="Scroll left"
       >
         <ChevronLeft size={15} />
@@ -124,9 +102,10 @@
       {#if $folders && $folders.length > 0}
         {#each $folders as folder (folder.id)}
           <label
-            class="h-10 w-10 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-ditto-secondary active:bg-ditto-tertiary has-[:checked]:bg-ditto-secondary has-[:checked]:border-1 has-[:checked]:border-ditto-less-bright"
+            class="h-10 w-10 inline-flex items-center justify-center border border-ditto-less-bright gap-2 whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-ditto-secondary active:bg-ditto-tertiary has-[:checked]:bg-ditto-secondary has-[:checked]:border-1 has-[:checked]:border-ditto-less-bright"
             for={folder.name}
             ><input
+              checked={folder.id === selectedFolder.id}
               onclick={() => {
                 selectFolder(folder);
                 showEmojiOptions = false;
@@ -150,23 +129,21 @@
     {#if showRightGradient}
       <button
         onclick={() => scroll("right")}
-        class=" bg-white rounded-full"
+        class=" bg-black/50 rounded-full text-white"
         aria-label="Scroll right"
       >
         <ChevronRight size={15} />
       </button>
     {/if}
   </div>
-  <div>
-    <button
-      onclick={() => {
-        showEmojiOptions = !showEmojiOptions;
-      }}
-      class="h-10 w-10 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-ditto-secondary active:bg-ditto-tertiary"
-    >
-      <FolderPlus />
-    </button>
-  </div>
+  <button
+    onclick={() => {
+      showEmojiOptions = !showEmojiOptions;
+    }}
+    class="h-10 w-10 inline-flex items-center justify-center gap-2 border border-ditto-less-bright whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-ditto-secondary active:bg-ditto-tertiary"
+  >
+    <FolderPlus />
+  </button>
 </div>
 
 <style>

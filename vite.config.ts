@@ -16,6 +16,7 @@ export default defineConfig({
       input: {
         background: resolve("src/background/background.ts"),
         popup: resolve("index.html"),
+        script: resolve("src/content_scripts/script.ts"),
       },
       output: {
         entryFileNames: "[name].js",

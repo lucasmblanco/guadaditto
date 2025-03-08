@@ -1,7 +1,6 @@
 <script lang="ts">
   import FolderListB from "./lib/FolderListB.svelte";
   import FolderListA from "./lib/FolderListA.svelte";
-
   import { FolderInput, BadgePlus } from "lucide-svelte";
   import { db } from "./background/background";
   import List from "./lib/List.svelte";
@@ -12,44 +11,31 @@
   let showEmojiOptions = $state(false);
   let url = $state("");
   let title = $state("");
-  let scrollContainer = $state<HTMLElement | null>(null);
-  let showLeftGradient = $state(false);
-  let showRightGradient = $state(false);
   let selectedFolder = $state({ id: null, name: "" });
   let resize = $state(false);
+  let checkedDefault = $state(true);
 
-  // function handleScroll() {
-  //   if (scrollContainer) {
-  //     requestAnimationFrame(() => {
-  //       if (!scrollContainer) return;
-  //       const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
-  //       showLeftGradient = Math.ceil(scrollLeft) > 0;
-  //       showRightGradient =
-  //         Math.ceil(scrollLeft) < scrollWidth - clientWidth - 1;
-  //     });
-  //   }
-  // }
   const fetchTabData = async () => {
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
+    chrome.storage.local.get(["videoUrl", "videoTitle"], async (data) => {
+      if (data.videoUrl && data.videoTitle) {
+        url = data.videoUrl;
+        title = data.videoTitle;
+        chrome.storage.local.remove(["videoUrl", "videoTitle"]);
+      } else {
+        const [tab] = await chrome.tabs.query({
+          active: true,
+          currentWindow: true,
+        });
+        if (tab?.url) {
+          url = tab.url;
+          title = tab.title || ""; // trim title: (1) title - Youtube
+        }
+      }
     });
-    if (tab?.url) {
-      url = tab.url;
-      title = tab.title || "";
-    }
   };
 
   onMount(() => {
     fetchTabData();
-    // const resizeObserver = new ResizeObserver(handleScroll);
-    // if (scrollContainer) {
-    //   resizeObserver.observe(scrollContainer);
-    // }
-
-    // return () => {
-    //   resizeObserver.disconnect();
-    // };
   });
 
   const handleSubmit = async (e) => {
@@ -67,7 +53,7 @@
   };
 
   function selectFolder(folder) {
-    if (folder === null || selectedFolder.name === folder.name) {
+    if (folder === null) {
       selectedFolder = { id: null, name: "" };
     } else {
       selectedFolder.id = folder.id;
@@ -85,7 +71,7 @@
   </h1>
   <form class="flex gap-2 justify-between items-center" onsubmit={handleSubmit}>
     <input
-      bind:value={url}
+      bind:value={title}
       readonly
       disabled
       name="url"
@@ -98,7 +84,7 @@
         onclick={() => {
           showExistingFolders = !showExistingFolders;
         }}
-        class="h-6 w-6 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 //// text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white"
+        class="h-6 w-6 inline-flex items-center justify-center border border-ditto-less-bright gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 //// text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white"
       >
         {#if selectedFolder.id}
           {selectedFolder.name}
@@ -108,7 +94,7 @@
       </button>
       <button
         type="submit"
-        class="h-6 w-6 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 //// text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white"
+        class="h-6 w-6 inline-flex items-center justify-center border border-ditto-less-bright gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 //// text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white"
         ><BadgePlus size={15} /></button
       >
     </div>
@@ -116,10 +102,15 @@
   {#if showExistingFolders}
     <FolderListA {selectFolder} bind:resize />
   {:else}
-    <FolderListB {selectFolder} bind:showEmojiOptions bind:resize />
+    <FolderListB
+      {selectFolder}
+      {selectedFolder}
+      bind:showEmojiOptions
+      bind:resize
+    />
   {/if}
   {#if !showEmojiOptions}
-    <List {selectedFolder} />
+    <List bind:selectedFolder bind:checkedDefault />
   {:else}
     <EmojiList bind:showEmojiOptions bind:resize />
   {/if}

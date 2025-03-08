@@ -1,0 +1,20 @@
+span.g-container {
+  display: flex !important;
+}
+button.g-button {
+  background: #0f0f0f;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+button.g-button:hover {
+  filter: saturate(1.5);
+}
+
+img.g-icon {
+  width: 16px;
+  height: 16px;
+}

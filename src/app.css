@@ -6,12 +6,27 @@
     format("truetype");
 }
 
-@theme {
+/* 
+--text: #0e0711;
+--background: #faf7fc;
+--primary: #904eb7;
+--secondary: #daa4c4;
+--accent: #c97c9c; */
+
+/* @theme {
   --color-ditto-primary: #c57be6;
   --color-ditto-secondary: #9c5ab4;
   --color-ditto-tertiary: #573265;
   --color-ditto-bright: #e1bbf2;
   --color-ditto-less-bright: #d7a5ee;
+  --font-main: "HankenGroteskExtraBoldItalic", sans-serif;
+} */
+
+@theme {
+  --color-bg-ditto: #202020;
+  --color-primary-ditto: #392443;
+  --color-accent-ditto: #774b8a;
+  --color-accent-bg-ditto: #575757;
   --font-main: "HankenGroteskExtraBoldItalic", sans-serif;
 }
 

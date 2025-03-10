@@ -64,9 +64,9 @@
 </script>
 
 <main
-  class="bg-ditto-primary p-3 text-black w-[400px] border-1 border-ditto-bright pt-0"
+  class="bg-bg-ditto p-3 w-[400px] border border-accent-bg-ditto pt-0 text-white"
 >
-  <h1 class="font-main text-2xl py-2 text-ditto-tertiary/50 select-none">
+  <h1 class="font-main text-2xl py-2 text-primary-ditto select-none">
     guardaditto
   </h1>
   <form class="flex gap-2 justify-between items-center" onsubmit={handleSubmit}>
@@ -76,7 +76,7 @@
       disabled
       name="url"
       type="text"
-      class="col-span-4 flex h-6 w-full rounded-md border border-ditto-less-bright bg-ditto-secondary px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      class="col-span-4 flex h-8 w-full rounded-full border border-accent-ditto bg-primary-ditto px-2 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
     />
     <div class="flex gap-2">
       <button
@@ -84,34 +84,40 @@
         onclick={() => {
           showExistingFolders = !showExistingFolders;
         }}
-        class="h-6 w-6 inline-flex items-center justify-center border border-ditto-less-bright gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 //// text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white"
+        class="h-8 w-8 inline-flex items-center justify-center border {showExistingFolders
+          ? 'bg-primary-ditto'
+          : ''} border-accent-ditto gap-2 whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 active:text-white"
       >
         {#if selectedFolder.id}
           {selectedFolder.name}
         {:else}
-          <FolderInput size={15} />
+          <FolderInput class="text-xs" />
         {/if}
       </button>
       <button
         type="submit"
-        class="h-6 w-6 inline-flex items-center justify-center border border-ditto-less-bright gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 //// text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white"
-        ><BadgePlus size={15} /></button
+        class="h-8 w-8 inline-flex items-center justify-center border border-accent-ditto gap-2 whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 //// text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 active:text-white"
+        ><BadgePlus class="text-xs" /></button
       >
     </div>
   </form>
-  {#if showExistingFolders}
-    <FolderListA {selectFolder} bind:resize />
-  {:else}
-    <FolderListB
-      {selectFolder}
-      {selectedFolder}
-      bind:showEmojiOptions
-      bind:resize
-    />
-  {/if}
-  {#if !showEmojiOptions}
-    <List bind:selectedFolder bind:checkedDefault />
-  {:else}
-    <EmojiList bind:showEmojiOptions bind:resize />
-  {/if}
+  <div class="relative h-14">
+    {#if showExistingFolders}
+      <FolderListA {selectFolder} bind:resize />
+    {:else}
+      <FolderListB
+        {selectFolder}
+        {selectedFolder}
+        bind:showEmojiOptions
+        bind:resize
+      />
+    {/if}
+  </div>
+  <div class="relative h-50">
+    {#if !showEmojiOptions}
+      <List bind:selectedFolder bind:checkedDefault />
+    {:else}
+      <EmojiList bind:showEmojiOptions bind:resize />
+    {/if}
+  </div>
 </main>

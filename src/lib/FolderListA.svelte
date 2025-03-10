@@ -61,7 +61,7 @@
 </script>
 
 <div
-  class="grid grid-flow-col gap-2 items-center min-w-0 py-2 text-sm justify-between"
+  class="relative grid grid-flow-col gap-2 items-center min-w-0 py-2 text-sm justify-between"
   transition:slide
 >
   {#if showLeftGradient}
@@ -75,14 +75,14 @@
   {/if}
 
   <div
-    class="grid grid-flow-col items-center overflow-x-auto min-w-0 scrollbar-hide select-none"
+    class="grid grid-flow-col items-center overflow-x-auto min-w-0 scrollbar-hide select-none gap-2"
     bind:this={scrollContainer}
     onscroll={handleScroll}
   >
     {#if $folders && $folders.length > 0}
       {#each $folders as folder (folder.id)}
         <label
-          class="h-10 w-10 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-ditto-secondary active:bg-ditto-tertiary"
+          class="h-10 w-10 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-primary-ditto active:bg-primary-ditto/150"
           for={folder.name}
           ><input
             onclick={() => selectFolder(folder)}

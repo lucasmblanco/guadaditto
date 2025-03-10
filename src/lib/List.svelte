@@ -2,7 +2,7 @@
   import { liveQuery } from "dexie";
   import { db } from "../background/background";
   import { YoutubeBrands } from "svelte-awesome-icons";
-  import { ExternalLink, Trash2 } from "lucide-svelte";
+  import { ExternalLink, Trash2, Youtube } from "lucide-svelte";
   import { flip } from "svelte/animate";
   import { fade, slide } from "svelte/transition";
 
@@ -23,13 +23,13 @@
 </script>
 
 <ul
-  class="relative flex flex-col h-50 overflow-y-auto rounded-md bg-ditto-secondary border-1 border-ditto-less-bright pt-2"
+  class="relative flex flex-col h-full overflow-y-auto bg-primary-ditto border-1 border-accent-ditto pt-2 rounded-xl"
   transition:slide
 >
   {#if $videos}
     {#each $videos as video (video.id)}
       <li
-        class="flex items-center gap-2 text-xs px-2 hover:bg-ditto-primary/50 py-1 rounded"
+        class="flex items-center gap-2 text-xs px-2 hover:bg-bg-ditto/50 py-1 rounded-lg"
         animate:flip
       >
         <a
@@ -37,13 +37,13 @@
           target="_blank"
           class="flex items-center basis-full gap-2 text-xs truncate"
         >
-          <YoutubeBrands class="basis-auto" size={"20"} />
+          <Youtube class="basis-auto" size={"20"} />
           <span class="text-left truncate basis-full">{video.title}</span>
         </a>
         <button
-          class="flex items-center cursor-pointer rounded bg-red-400 saturate-50 hover:saturate-100 p-1"
+          class="flex items-center cursor-pointer rounded p-1"
           onclick={() => db.videos.delete(video.id)}
-          ><Trash2 class="basis-auto " size={15} /></button
+          ><Trash2 class="basis-auto hover:text-red-500" size={15} /></button
         >
       </li>
     {/each}
@@ -51,7 +51,7 @@
   {#if selectedFolder.id}
     <div class="mt-auto"></div>
     <button
-      class="w-fit p-2 mt-1 sticky rounded-t-full bg-red-400 -bottom-1 left-1/2 transform -translate-x-1/2 saturate-50 hover:saturate-100"
+      class="text-black w-fit p-2 mt-1 sticky rounded-t-full bg-red-400 -bottom-1 left-1/2 transform -translate-x-1/2 saturate-50 hover:saturate-100"
       onclick={() => {
         checkedDefault = true;
         db.folders.where("id").equals(selectedFolder.id).delete();

@@ -64,12 +64,12 @@
 </script>
 
 <div
-  class="grid grid-flow-col py-2 items-center text-sm justify-between min-w-0 gap-2"
+  class="relative grid grid-flow-col py-2 items-center text-sm justify-between min-w-0 gap-2"
   transition:slide
 >
   <div class=" grid grid-flow-col gap-2 items-center min-w-0">
     <label
-      class="h-10 w-10 inline-flex items-center justify-center gap-2 border border-ditto-less-bright whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-ditto-secondary active:bg-ditto-tertiary active:text-white has-[:checked]:bg-ditto-secondary has-[:checked]:border-1 has-[:checked]:border-ditto-less-bright"
+      class="h-10 w-10 inline-flex items-center justify-center gap-2 border border-accent-ditto whitespace-nowrap rounded-full text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-primary-ditto active:bg-primary-ditto/150 active:text-white has-[:checked]:bg-primary-ditto has-[:checked]:border-1 has-[:checked]:border-accent-ditto"
       for="no_folder"
       ><input
         checked={selectedFolder.id === null}
@@ -95,15 +95,15 @@
       </button>
     {/if}
     <div
-      class="grid grid-flow-col items-center overflow-x-auto min-w-0 scrollbar-hide select-none"
+      class="grid grid-flow-col items-center overflow-x-auto min-w-0 scrollbar-hide select-none gap-2"
       bind:this={scrollContainer}
       onscroll={handleScroll}
     >
       {#if $folders && $folders.length > 0}
         {#each $folders as folder (folder.id)}
           <label
-            class="h-10 w-10 inline-flex items-center justify-center border border-ditto-less-bright gap-2 whitespace-nowrap rounded-md text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-ditto-secondary active:bg-ditto-tertiary has-[:checked]:bg-ditto-secondary has-[:checked]:border-1 has-[:checked]:border-ditto-less-bright"
-            for={folder.name}
+            class="h-10 w-10 inline-flex items-center justify-center border border-accent-ditto gap-2 whitespace-nowrap rounded-full text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-1 has-[:checked]:border-accent-ditto"
+            for={folder.id + folder.name}
             ><input
               checked={folder.id === selectedFolder.id}
               onclick={() => {
@@ -113,7 +113,7 @@
               hidden
               type="radio"
               name="folder"
-              id={folder.name}
+              id={folder.id + folder.name}
               value={folder.name}
             />{folder.name}</label
           >
@@ -140,7 +140,7 @@
     onclick={() => {
       showEmojiOptions = !showEmojiOptions;
     }}
-    class="h-10 w-10 inline-flex items-center justify-center gap-2 border border-ditto-less-bright whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-ditto-secondary active:bg-ditto-tertiary"
+    class="h-10 w-10 inline-flex items-center justify-center gap-2 border border-accent-ditto whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary-ditto active:bg-primary-ditto/150"
   >
     <FolderPlus />
   </button>

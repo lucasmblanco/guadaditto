@@ -5,7 +5,7 @@
     FolderPlus,
     ChevronLeft,
     ChevronRight,
-    Trash2,
+    CircleDashed,
   } from "lucide-svelte";
   import { db } from "../background/background";
   import { onMount } from "svelte";
@@ -64,12 +64,12 @@
 </script>
 
 <div
-  class="relative grid grid-flow-col py-2 items-center text-sm justify-between min-w-0 gap-2"
+  class="relative grid min-w-0 grid-flow-col items-center justify-between gap-2 py-2 text-sm"
   transition:slide
 >
-  <div class=" grid grid-flow-col gap-2 items-center min-w-0">
+  <div class=" grid min-w-0 grid-flow-col items-center gap-2">
     <label
-      class="h-10 w-10 inline-flex items-center justify-center gap-2 border border-accent-ditto whitespace-nowrap rounded-full text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-primary-ditto active:bg-primary-ditto/150 active:text-white has-[:checked]:bg-primary-ditto has-[:checked]:border-1 has-[:checked]:border-accent-ditto"
+      class="border-accent-ditto ring-offset-background focus-visible:ring-ring // hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-accent-ditto inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full border text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:pointer-events-none disabled:opacity-50 has-[:checked]:border-1 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
       for="no_folder"
       ><input
         checked={selectedFolder.id === null}
@@ -88,21 +88,21 @@
     {#if showLeftGradient}
       <button
         onclick={() => scroll("left")}
-        class=" bg-black/50 rounded-full text-white"
+        class=" rounded-full bg-black/50 text-white"
         aria-label="Scroll left"
       >
         <ChevronLeft size={15} />
       </button>
     {/if}
     <div
-      class="grid grid-flow-col items-center overflow-x-auto min-w-0 scrollbar-hide select-none gap-2"
+      class="scrollbar-hide grid min-w-0 grid-flow-col items-center gap-2 overflow-x-auto select-none"
       bind:this={scrollContainer}
       onscroll={handleScroll}
     >
       {#if $folders && $folders.length > 0}
         {#each $folders as folder (folder.id)}
           <label
-            class="h-10 w-10 inline-flex items-center justify-center border border-accent-ditto gap-2 whitespace-nowrap rounded-full text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-1 has-[:checked]:border-accent-ditto"
+            class="border-accent-ditto ring-offset-background focus-visible:ring-ring // hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-accent-ditto inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full border text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 has-[:checked]:border-1 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
             for={folder.id + folder.name}
             ><input
               checked={folder.id === selectedFolder.id}
@@ -119,17 +119,15 @@
           >
         {/each}
       {:else}
-        <div
-          class="grid grid-flow-col items-center overflow-x-auto min-w-0 scrollbar-hide select-none"
-        >
-          No folders
-        </div>
+        <CircleDashed
+          class="text-primary-ditto h-10 w-10 text-2xl opacity-40"
+        />
       {/if}
     </div>
     {#if showRightGradient}
       <button
         onclick={() => scroll("right")}
-        class=" bg-black/50 rounded-full text-white"
+        class=" rounded-full bg-black/50 text-white"
         aria-label="Scroll right"
       >
         <ChevronRight size={15} />
@@ -140,7 +138,9 @@
     onclick={() => {
       showEmojiOptions = !showEmojiOptions;
     }}
-    class="h-10 w-10 inline-flex items-center justify-center gap-2 border border-accent-ditto whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 hover:bg-primary-ditto active:bg-primary-ditto/150"
+    class="border-accent-ditto ring-offset-background {showEmojiOptions
+      ? 'bg-primary-ditto'
+      : ''} focus-visible:ring-ring hover:bg-primary-ditto inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full border text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
   >
     <FolderPlus />
   </button>

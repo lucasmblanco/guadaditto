@@ -16,32 +16,32 @@
       });
     } else {
       return liveQuery(() =>
-        db.videos.where("folder_id").equals(selectedFolder.id).toArray()
+        db.videos.where("folder_id").equals(selectedFolder.id).toArray(),
       );
     }
   });
 </script>
 
 <ul
-  class="relative flex flex-col h-full overflow-y-auto bg-primary-ditto border-1 border-accent-ditto pt-2 rounded-xl"
+  class="bg-primary-ditto border-accent-ditto relative flex h-full flex-col overflow-y-auto rounded-xl border-1 pt-2"
   transition:slide
 >
   {#if $videos}
     {#each $videos as video (video.id)}
       <li
-        class="flex items-center gap-2 text-xs px-2 hover:bg-bg-ditto/50 py-1 rounded-lg"
+        class="hover:bg-bg-ditto/50 flex items-center gap-2 rounded-lg px-2 py-1 text-xs"
         animate:flip
       >
         <a
           href={video.url}
           target="_blank"
-          class="flex items-center basis-full gap-2 text-xs truncate"
+          class="flex basis-full items-center gap-2 truncate text-xs"
         >
           <Youtube class="basis-auto" size={"20"} />
-          <span class="text-left truncate basis-full">{video.title}</span>
+          <span class="basis-full truncate text-left">{video.title}</span>
         </a>
         <button
-          class="flex items-center cursor-pointer rounded p-1"
+          class="flex items-center rounded p-1"
           onclick={() => db.videos.delete(video.id)}
           ><Trash2 class="basis-auto hover:text-red-500" size={15} /></button
         >
@@ -51,7 +51,7 @@
   {#if selectedFolder.id}
     <div class="mt-auto"></div>
     <button
-      class="text-black w-fit p-2 mt-1 sticky rounded-t-full bg-red-400 -bottom-1 left-1/2 transform -translate-x-1/2 saturate-50 hover:saturate-100"
+      class="sticky -bottom-1 left-1/2 mt-1 w-fit -translate-x-1/2 transform rounded-t-full bg-red-400 p-2 text-black saturate-50 hover:saturate-100"
       onclick={() => {
         checkedDefault = true;
         db.folders.where("id").equals(selectedFolder.id).delete();

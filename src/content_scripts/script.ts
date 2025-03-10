@@ -10,7 +10,7 @@ function createButton() {
       "inline-metadata-item",
       "style-scope",
       "ytd-video-meta-block",
-      "g-container"
+      "g-container",
     );
 
     button.classList.add("g-button");
@@ -23,7 +23,7 @@ function createButton() {
     list.appendChild(spanContainer);
 
     const videoContainer = list.closest(
-      "ytd-rich-grid-media, ytd-video-renderer"
+      "ytd-rich-grid-media, ytd-video-renderer",
     );
 
     const linkElement = videoContainer?.querySelector("a#thumbnail");

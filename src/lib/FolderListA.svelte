@@ -61,13 +61,13 @@
 </script>
 
 <div
-  class="relative grid grid-flow-col gap-2 items-center min-w-0 py-2 text-sm justify-between"
+  class="relative grid min-w-0 grid-flow-col items-center justify-between gap-2 py-2 text-sm"
   transition:slide
 >
   {#if showLeftGradient}
     <button
       onclick={() => scroll("left")}
-      class=" bg-white rounded-full"
+      class=" rounded-full bg-white"
       aria-label="Scroll left"
     >
       <ChevronLeft size={15} />
@@ -75,14 +75,14 @@
   {/if}
 
   <div
-    class="grid grid-flow-col items-center overflow-x-auto min-w-0 scrollbar-hide select-none gap-2"
+    class="scrollbar-hide grid min-w-0 grid-flow-col items-center gap-2 overflow-x-auto select-none"
     bind:this={scrollContainer}
     onscroll={handleScroll}
   >
     {#if $folders && $folders.length > 0}
       {#each $folders as folder (folder.id)}
         <label
-          class="h-10 w-10 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-lg font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 // hover:bg-primary-ditto active:bg-primary-ditto/150"
+          class="ring-offset-background focus-visible:ring-ring // hover:bg-primary-ditto active:bg-primary-ditto/150 inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
           for={folder.name}
           ><input
             onclick={() => selectFolder(folder)}
@@ -96,7 +96,7 @@
       {/each}
     {:else}
       <div
-        class="grid grid-flow-col gap-2 items-center min-w-0 py-2 text-sm justify-between"
+        class="grid min-w-0 grid-flow-col items-center justify-between gap-2 py-2 text-sm"
       >
         No folders
       </div>
@@ -105,7 +105,7 @@
   {#if showRightGradient}
     <button
       onclick={() => scroll("right")}
-      class=" bg-white rounded-full"
+      class=" rounded-full bg-white"
       aria-label="Scroll right"
     >
       <ChevronRight size={15} />

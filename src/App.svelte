@@ -6,6 +6,7 @@
   import List from "./lib/List.svelte";
   import EmojiList from "./lib/EmojiList.svelte";
   import { onMount } from "svelte";
+  import { urlChecker } from "./utils/utils";
 
   let showExistingFolders = $state(false);
   let showEmojiOptions = $state(false);
@@ -14,6 +15,7 @@
   let selectedFolder = $state({ id: null, name: "" });
   let resize = $state(false);
   let checkedDefault = $state(true);
+  let enableSubmit = $state(false);
 
   const fetchTabData = async () => {
     chrome.storage.local.get(["videoUrl", "videoTitle"], async (data) => {
@@ -26,10 +28,16 @@
           active: true,
           currentWindow: true,
         });
-        if (tab?.url) {
+        if (tab?.url && urlChecker(tab?.url)) {
+          enableSubmit = true;
           url = tab.url;
           title = tab.title || ""; // trim title: (1) title - Youtube
+        } else {
+          title = "No youtube video found";
         }
+        // if (tab?.url) {
+
+        // }
       }
     });
   };
@@ -64,29 +72,30 @@
 </script>
 
 <main
-  class="bg-bg-ditto p-3 w-[400px] border border-accent-bg-ditto pt-0 text-white"
+  class="bg-bg-ditto border-accent-bg-ditto font-secondary w-[400px] border p-3 pt-0 text-white"
 >
-  <h1 class="font-main text-2xl py-2 text-primary-ditto select-none">
+  <h1 class="font-main text-accent-ditto py-2 text-2xl opacity-50 select-none">
     guardaditto
   </h1>
-  <form class="flex gap-2 justify-between items-center" onsubmit={handleSubmit}>
+  <form class="flex items-center justify-between gap-2" onsubmit={handleSubmit}>
     <input
       bind:value={title}
       readonly
       disabled
       name="url"
       type="text"
-      class="col-span-4 flex h-8 w-full rounded-full border border-accent-ditto bg-primary-ditto px-2 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+      class="border-accent-ditto bg-primary-ditto ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring col-span-4 flex h-8 w-full rounded-full border px-2 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
     />
     <div class="flex gap-2">
       <button
+        disabled={!enableSubmit}
         type="button"
         onclick={() => {
           showExistingFolders = !showExistingFolders;
         }}
-        class="h-8 w-8 inline-flex items-center justify-center border {showExistingFolders
+        class="inline-flex h-8 w-8 items-center justify-center border {showExistingFolders
           ? 'bg-primary-ditto'
-          : ''} border-accent-ditto gap-2 whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 active:text-white"
+          : ''} border-accent-ditto ring-offset-background focus-visible:ring-ring hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 cursor-pointer gap-2 rounded-full text-center text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
       >
         {#if selectedFolder.id}
           {selectedFolder.name}
@@ -95,8 +104,9 @@
         {/if}
       </button>
       <button
+        disabled={!enableSubmit}
         type="submit"
-        class="h-8 w-8 inline-flex items-center justify-center border border-accent-ditto gap-2 whitespace-nowrap rounded-full text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 //// text-center cursor-pointer hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 active:text-white"
+        class="border-accent-ditto ring-offset-background focus-visible:ring-ring not-first:hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 inline-flex h-8 w-8 cursor-pointer items-center justify-center gap-2 rounded-full border text-center text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
         ><BadgePlus class="text-xs" /></button
       >
     </div>

@@ -31,7 +31,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       { videoUrl: message.url, videoTitle: message.title },
       () => {
         chrome.action.openPopup();
-      }
+      },
     );
   }
 });

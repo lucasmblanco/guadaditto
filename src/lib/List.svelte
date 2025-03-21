@@ -1,20 +1,23 @@
 <script lang="ts">
+  import LinkElement from "./LinkElement.svelte";
   import { liveQuery } from "dexie";
   import { db } from "../background/background";
-  import { YoutubeBrands } from "svelte-awesome-icons";
-  import { ExternalLink, Trash2, Youtube } from "lucide-svelte";
+  import { HeartCrack, Trash2, Youtube } from "lucide-svelte";
   import { flip } from "svelte/animate";
-  import { fade, slide } from "svelte/transition";
+  import { slide } from "svelte/transition";
 
   let { selectedFolder = $bindable(), checkedDefault = $bindable() } = $props();
 
   let videos = $derived.by(() => {
+    console.log("derived by in works");
     if (selectedFolder.id === null) {
+      console.log("no id, so everything wtihout folder");
       return liveQuery(async () => {
         const allVideos = await db.videos.toArray();
         return allVideos.filter((video: any) => video.folder_id === null);
       });
     } else {
+      console.log("id present, filtering.......");
       return liveQuery(() =>
         db.videos.where("folder_id").equals(selectedFolder.id).toArray(),
       );
@@ -26,27 +29,24 @@
   class="bg-primary-ditto border-accent-ditto relative flex h-full flex-col overflow-y-auto rounded-xl border-1 pt-2"
   transition:slide
 >
-  {#if $videos}
+  {#if $videos && $videos.length > 0}
     {#each $videos as video (video.id)}
       <li
         class="hover:bg-bg-ditto/50 flex items-center gap-2 rounded-lg px-2 py-1 text-xs"
         animate:flip
       >
-        <a
-          href={video.url}
-          target="_blank"
-          class="flex basis-full items-center gap-2 truncate text-xs"
-        >
-          <Youtube class="basis-auto" size={"20"} />
-          <span class="basis-full truncate text-left">{video.title}</span>
-        </a>
-        <button
-          class="flex items-center rounded p-1"
-          onclick={() => db.videos.delete(video.id)}
-          ><Trash2 class="basis-auto hover:text-red-500" size={15} /></button
-        >
+        <LinkElement {video} />
       </li>
     {/each}
+  {:else}
+    <div class="grid h-full min-w-0 grid-flow-col place-items-center">
+      <div
+        class="grid min-w-0 grid-flow-row place-items-center gap-1 opacity-50"
+      >
+        <HeartCrack class="text-accent-ditto" size={50} />
+        <p class="text-accent-ditto text-base font-bold">So empty...</p>
+      </div>
+    </div>
   {/if}
   {#if selectedFolder.id}
     <div class="mt-auto"></div>
@@ -55,7 +55,7 @@
       onclick={() => {
         checkedDefault = true;
         db.folders.where("id").equals(selectedFolder.id).delete();
-        selectedFolder = { id: null, name: "" };
+        selectedFolder = { id: null, name: "" }; // dont interact direclty
       }}
     >
       <Trash2 size={15} />

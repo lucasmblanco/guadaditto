@@ -1,6 +1,6 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
-  import emojiData from "./list.json";
+  import emojiData from "../data/emojiList.json";
   import { db } from "../background/background";
 
   let { showEmojiOptions = $bindable(), resize = $bindable() } = $props();
@@ -42,14 +42,16 @@
       </button>
     {/each}
   </div>
-  <div class="relative h-[calc(100%-3rem)] overflow-y-auto">
-    <div transition:slide class="relative grid grid-cols-10 gap-[.1rem]">
+  <div
+    class="border-accent-ditto relative h-[calc(100%-3rem)] overflow-y-auto rounded-xl border-1"
+  >
+    <div class=" relative grid grid-cols-10 gap-[.1rem]">
       {#if activeCategory}
         {#each emojisCat[activeCategory] as emoji}
           <button
             onclick={createFolder}
             value={emoji.emoji}
-            class=" hover:bg-primary-ditto/50 active:bg-primary-ditto/150 h-8 w-full self-center rounded-full text-center"
+            class=" font-emoji hover:bg-primary-ditto/50 active:bg-primary-ditto/150 h-8 w-full self-center rounded-full text-center"
             >{emoji.emoji}</button
           >
         {/each}

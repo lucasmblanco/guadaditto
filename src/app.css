@@ -10,6 +10,12 @@
   src: url("../static/fonts/Inter-VariableFont.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "Noto Color Emoji";
+  src: url(../static/fonts/NotoColorEmoji-Regular.ttf) format("truetype");
+  font-display: swap;
+}
+
 @theme {
   --color-bg-ditto: #202020;
   --color-primary-ditto: #392443;
@@ -17,6 +23,7 @@
   --color-accent-bg-ditto: #424040;
   --font-main: "HankenGroteskExtraBoldItalic", sans-serif;
   --font-secondary: "Inter", sans-serif;
+  --font-emoji: "Noto Color Emoji", sans-serif;
 }
 
 :root {
@@ -31,6 +38,11 @@
 }
 body {
   margin: 0;
+  background-color: var(--color-bg-ditto);
+  border: 1px solid var(--color-accent-bg-ditto);
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  width: 400px;
+  color: white;
   /* display: flex;
   place-items: center; */
   /* min-width: 320px;

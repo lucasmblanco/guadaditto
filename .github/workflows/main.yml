@@ -13,10 +13,26 @@ jobs:
       matrix:
         node-version: [20]
     steps:
+      # Checkout específico de la rama que activó el workflow
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.ref }}
           fetch-depth: 0
+
+      # Confirmar la rama en la que estamos trabajando
+      - name: Verify current branch
+        run: |
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "Working on branch: $CURRENT_BRANCH"
+          echo "Expected branch from GitHub ref: ${GITHUB_REF#refs/heads/}"
+
+          if [ "$CURRENT_BRANCH" != "${GITHUB_REF#refs/heads/}" ]; then
+            echo "Error: Branch mismatch. Expected ${GITHUB_REF#refs/heads/}, got $CURRENT_BRANCH"
+            exit 1
+          fi
+
+          echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Install pnpm
         uses: pnpm/action-setup@v4
@@ -32,7 +48,6 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      # Cálculo automático de versión basado en commits
       - name: Calculate version
         id: versioning
         uses: paulhatch/semantic-version@v5.0.2
@@ -42,25 +57,21 @@ jobs:
           minor_pattern: "feat:"
           patch_pattern: "fix:"
 
-      # Crear o actualizar version.ts
       - name: Update version.ts
         run: |
           VERSION="${{ steps.versioning.outputs.version }}"
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+          if [[ "${{ env.branch }}" == "dev" ]]; then
             VERSION="${VERSION}-beta"
           fi
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "export const VERSION = '${VERSION}';" > src/version.ts
           echo "export const BUILD_DATE = '$(date -u +"%Y-%m-%d")';" >> src/version.ts
 
-      # Actualizar package.json y manifest.json con la nueva versión
       - name: Update package.json and manifest.json
         run: |
-          VERSION="${{ steps.versioning.outputs.version }}"
-          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
-            VERSION="${VERSION}-beta"
-          fi
           # Actualizar package.json
           pnpm pkg set version=${VERSION}
+
           # Ejecutar script para actualizar manifest.json
           node -e "
           const fs = require('fs');
@@ -69,11 +80,35 @@ jobs:
           fs.writeFileSync('./public/manifest.json', JSON.stringify(manifest, null, 2));
           "
 
-      # Commit y push de los cambios
-      - name: Commit and Push Version
+      - name: Check for changes
+        id: git_status
         run: |
+          git status --porcelain
+          if [[ -z $(git status --porcelain) ]]; then
+            echo "no_changes=true" >> $GITHUB_OUTPUT
+          else
+            echo "no_changes=false" >> $GITHUB_OUTPUT
+          fi
+
+      # Commit y push SOLO a la rama actual, con validaciones adicionales
+      - name: Commit and Push Version
+        if: steps.git_status.outputs.no_changes == 'false'
+        run: |
+          # Verificar de nuevo que estamos en la rama correcta antes de hacer push
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          if [ "$CURRENT_BRANCH" != "${{ env.branch }}" ]; then
+            echo "Error: Branch mismatch before push. Expected ${{ env.branch }}, got $CURRENT_BRANCH"
+            exit 1
+          fi
+
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add package.json public/manifest.json src/version.ts
-          git commit -m "chore: bump version to \${VERSION}"
-          git push
+          git commit -m "chore: bump version to ${VERSION}"
+
+          # Push explícitamente a la rama actual
+          git push origin $CURRENT_BRANCH
+
+      - name: No changes to commit
+        if: steps.git_status.outputs.no_changes == 'true'
+        run: echo "No changes detected. Skipping commit."

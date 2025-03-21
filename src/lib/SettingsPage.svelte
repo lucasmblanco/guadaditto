@@ -40,7 +40,7 @@
   }
 </script>
 
-<main class="h-[288px] p-3 pt-0">
+<main class="h-[270px] p-3 pt-0">
   <ul class="flex flex-col items-start gap-2">
     <li>
       <label class="hover:text-accent-ditto">
@@ -56,3 +56,4 @@
   </ul>
 </main>
 <foooter class="flex justify-center opacity-20">{`${VERSION} @ 2025`}</foooter>
+

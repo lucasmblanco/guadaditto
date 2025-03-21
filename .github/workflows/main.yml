@@ -1,0 +1,77 @@
+name: Version Update
+on:
+  push:
+    branches:
+      - dev
+      - main
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [20]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          
+      - name: Install dependencies
+        run: pnpm install
+        
+      # Cálculo automático de versión basado en commits
+      - name: Calculate version
+        id: versioning
+        uses: paulhatch/semantic-version@v5.0.2
+        with:
+          tag_prefix: "v"
+          major_pattern: "BREAKING CHANGE:"
+          minor_pattern: "feat:"
+          patch_pattern: "fix:"
+          
+      # Crear o actualizar version.ts
+      - name: Update version.ts
+        run: |
+          VERSION="${{ steps.versioning.outputs.version }}"
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            VERSION="${VERSION}-beta"
+          fi
+          echo "export const VERSION = '${VERSION}';" > src/version.ts
+          echo "export const BUILD_DATE = '$(date -u +"%Y-%m-%d")';" >> src/version.ts
+          
+      # Actualizar package.json y manifest.json con la nueva versión
+      - name: Update package.json and manifest.json
+        run: |
+          VERSION="${{ steps.versioning.outputs.version }}"
+          if [[ "${{ github.ref }}" == "refs/heads/dev" ]]; then
+            VERSION="${VERSION}-beta"
+          fi
+          # Actualizar package.json
+          pnpm pkg set version=${VERSION}
+          # Ejecutar script para actualizar manifest.json
+          node -e "
+          const fs = require('fs');
+          const manifest = JSON.parse(fs.readFileSync('./public/manifest.json', 'utf8'));
+          manifest.version = '${VERSION}';
+          fs.writeFileSync('./public/manifest.json', JSON.stringify(manifest, null, 2));
+          "
+          
+      # Commit y push de los cambios
+      - name: Commit and Push Version
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add package.json public/manifest.json src/version.ts
+          git commit -m "chore: bump version to \${VERSION}"
+          git push

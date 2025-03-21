@@ -1,6 +1,7 @@
 <script lang="ts">
   import { db } from "../background/background";
   import { importDB, exportDB, importInto } from "dexie-export-import";
+  import { VERSION } from "../version";
 
   const options = {
     acceptVersionDiff: true, // Ignore version differences between databases
@@ -54,6 +55,4 @@
     </li>
   </ul>
 </main>
-<foooter class="flex justify-center opacity-20"
-  >{`v.${import.meta.env.VITE_APP_VERSION} @ 2025`}</foooter
->
+<foooter class="flex justify-center opacity-20">{`${VERSION} @ 2025`}</foooter>

@@ -1,21 +1,31 @@
 {
   "manifest_version": 3,
   "name": "guardaditto",
-  "version": "0.1.0",
+  "version": "0.0.1-beta",
   "description": "lorem ipsum",
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": ["storage", "activeTab", "tabs"],
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs"
+  ],
   "background": {
     "service_worker": "background.js",
     "type": "module"
   },
   "content_scripts": [
     {
-      "matches": ["https://www.youtube.com/*"],
-      "js": ["script.js"],
-      "css": ["assets/button.css"]
+      "matches": [
+        "https://www.youtube.com/*"
+      ],
+      "js": [
+        "script.js"
+      ],
+      "css": [
+        "assets/button.css"
+      ]
     }
   ],
   "icons": {
@@ -26,8 +36,12 @@
   },
   "web_accessible_resources": [
     {
-      "resources": ["icons/*"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "icons/*"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ]
 }

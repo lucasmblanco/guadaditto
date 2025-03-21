@@ -55,4 +55,6 @@
     </li>
   </ul>
 </main>
-<foooter class=" flex justify-center opacity-20">{`${VERSION} @ 2025`}</foooter>
+<foooter class="select none flex justify-center opacity-20"
+  >{`${VERSION} @ 2025`}</foooter
+>

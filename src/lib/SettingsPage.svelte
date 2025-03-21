@@ -54,3 +54,6 @@
     </li>
   </ul>
 </main>
+<foooter class="flex justify-center opacity-20"
+  >{`v.${import.meta.env.VITE_APP_VERSION} @ 2025`}</foooter
+>

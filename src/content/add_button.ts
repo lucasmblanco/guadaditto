@@ -1,3 +1,22 @@
+const videosContainer = document.querySelector("ytd-rich-grid-renderer");
+
+const observer = new MutationObserver((mutations) => {
+  mutations.forEach((mutation) => {
+    if (mutation.addedNodes.length) {
+      createButton();
+    }
+  });
+});
+
+const observerConfig = {
+  childList: true,
+  subtree: true,
+};
+
+if (videosContainer) {
+  observer.observe(videosContainer, observerConfig);
+}
+
 function createButton() {
   const lists = document.querySelectorAll("#metadata-line");
 

@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - dev
-      - main
 jobs:
   version:
     runs-on: ubuntu-latest
@@ -71,9 +70,6 @@ jobs:
       - name: Update version.ts
         run: |
           VERSION="${{ steps.semantic_version.outputs.version }}"
-          if [[ "${{ env.branch }}" == "dev" ]]; then
-            VERSION="${VERSION}-beta"
-          fi
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "export const VERSION = '${VERSION}';" > src/version.ts
           echo "export const BUILD_DATE = '$(date -u +"%Y-%m-%d")';" >> src/version.ts
@@ -120,16 +116,16 @@ jobs:
           # Push explícitamente a la rama actual
           git push origin $CURRENT_BRANCH
 
-      - name: Create production release
-        uses: ncipollo/release-action@v1
-        id: release
-        with:
-          tag: ${{ steps.tag_version.outputs.new_tag }}
-          name: ${{ steps.semantic_version.outputs.version_tag }}
-          body: ${{ steps.build_changelog.outputs.changelog }}
-          draft: false
-          prerelease: false
-          commit: ${{ steps.semantic_version.outputs.current_commit }}
+      # - name: Create production release
+      #   uses: ncipollo/release-action@v1
+      #   id: release
+      #   with:
+      #     tag: ${{ steps.tag_version.outputs.new_tag }}
+      #     name: ${{ steps.semantic_version.outputs.version_tag }}
+      #     body: ${{ steps.build_changelog.outputs.changelog }}
+      #     draft: false
+      #     prerelease: false
+      #     commit: ${{ steps.semantic_version.outputs.current_commit }}
 
       - name: No changes to commit
         if: steps.git_status.outputs.no_changes == 'true'

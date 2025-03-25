@@ -126,6 +126,11 @@ jobs:
       - name: Build project
         run: pnpm run build
 
+      - name: Compress dist folder
+        run: |
+          RELEASE_NAME="guardadito-${{ steps.semantic_version.outputs.version }}.zip" 
+          zip -r RELEASE_NAME dist/
+
       - name: Create production release
         uses: ncipollo/release-action@v1
         id: release
@@ -136,7 +141,7 @@ jobs:
           draft: false
           prerelease: false
           commit: ${{ steps.semantic_version.outputs.current_commit }}
-          artifacts: "dist/**/*"
+          artifacts: RELEASE_NAME
 
       - name: No changes to commit
         if: steps.git_status.outputs.no_changes == 'true'

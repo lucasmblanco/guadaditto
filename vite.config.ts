@@ -6,8 +6,14 @@ import path, { resolve } from "path";
 export default defineConfig({
   plugins: [tailwindcss(), svelte()],
   resolve: {
+    extensions: [".ts", ".tsx", ".json", ".svelte"],
     alias: {
       $lib: path.resolve("./src/lib"),
+    },
+  },
+  server: {
+    warmup: {
+      clientFiles: ["./src/App.svelte", "./src/lib/Emoji.svelte"],
     },
   },
   build: {

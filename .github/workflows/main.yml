@@ -136,7 +136,7 @@ jobs:
           draft: false
           prerelease: false
           commit: ${{ steps.semantic_version.outputs.current_commit }}
-          artifacts: dist/
+          artifacts: "dist/**/*"
 
       - name: No changes to commit
         if: steps.git_status.outputs.no_changes == 'true'

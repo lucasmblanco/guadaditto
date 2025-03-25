@@ -4,7 +4,7 @@ permissions:
 on:
   push:
     branches:
-      - dev
+      - main
 jobs:
   version:
     runs-on: ubuntu-latest
@@ -54,7 +54,7 @@ jobs:
           tag_prefix: "v"
           major_pattern: "(MAJOR)"
           minor_pattern: "(MINOR)"
-          version_format: "${major}.${minor}.${patch}-rc${increment}"
+          version_format: "${major}.${minor}.${patch}"
           user_format_type: "csv"
           bump_each_commit: false
           search_commit_body: true
@@ -116,16 +116,24 @@ jobs:
           # Push explícitamente a la rama actual
           git push origin $CURRENT_BRANCH
 
-      # - name: Create production release
-      #   uses: ncipollo/release-action@v1
-      #   id: release
-      #   with:
-      #     tag: ${{ steps.tag_version.outputs.new_tag }}
-      #     name: ${{ steps.semantic_version.outputs.version_tag }}
-      #     body: ${{ steps.build_changelog.outputs.changelog }}
-      #     draft: false
-      #     prerelease: false
-      #     commit: ${{ steps.semantic_version.outputs.current_commit }}
+      - name: Merge main into dev
+        run: |
+          git fetch origin
+          git checkout dev
+          git merge main --no-ff -m "chore: merge main into dev"
+          git push origin dev
+
+      - name: Create production release
+        uses: ncipollo/release-action@v1
+        id: release
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: ${{ steps.semantic_version.outputs.version_tag }}
+          body: ${{ steps.build_changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+          commit: ${{ steps.semantic_version.outputs.current_commit }}
+          artifacts: dist/
 
       - name: No changes to commit
         if: steps.git_status.outputs.no_changes == 'true'

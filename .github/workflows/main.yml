@@ -128,8 +128,9 @@ jobs:
 
       - name: Compress dist folder
         run: |
-          RELEASE_NAME="guardadito-${{ steps.semantic_version.outputs.version }}.zip" 
-          zip -r RELEASE_NAME dist/
+          RELEASE_NAME="guardadito-${{ steps.semantic_version.outputs.version }}.zip"
+          zip -r "$RELEASE_NAME" dist/
+          echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
 
       - name: Create production release
         uses: ncipollo/release-action@v1
@@ -141,7 +142,7 @@ jobs:
           draft: false
           prerelease: false
           commit: ${{ steps.semantic_version.outputs.current_commit }}
-          artifacts: RELEASE_NAME
+          artifacts: ${{ env.RELEASE_NAME }}
 
       - name: No changes to commit
         if: steps.git_status.outputs.no_changes == 'true'

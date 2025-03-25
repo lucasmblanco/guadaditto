@@ -123,6 +123,9 @@ jobs:
           git merge main --no-ff -m "chore: merge main into dev"
           git push origin dev
 
+      - name: Build project
+        run: pnpm run build
+
       - name: Create production release
         uses: ncipollo/release-action@v1
         id: release

@@ -9,15 +9,12 @@
   let { selectedFolder = $bindable(), checkedDefault = $bindable() } = $props();
 
   let videos = $derived.by(() => {
-    console.log("derived by in works");
     if (selectedFolder.id === null) {
-      console.log("no id, so everything wtihout folder");
       return liveQuery(async () => {
         const allVideos = await db.videos.toArray();
         return allVideos.filter((video: any) => video.folder_id === null);
       });
     } else {
-      console.log("id present, filtering.......");
       return liveQuery(() =>
         db.videos.where("folder_id").equals(selectedFolder.id).toArray(),
       );

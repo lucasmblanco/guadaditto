@@ -9,8 +9,6 @@
   import { urlChecker, extractVideoTitle, selectFolder } from "./utils/utils";
   import SettingsPage from "./lib/SettingsPage.svelte";
 
-  // test workflow with word, v4
-
   let showExistingFolders = $state(false);
   let showEmojiOptions = $state(false);
   let url = $state("");

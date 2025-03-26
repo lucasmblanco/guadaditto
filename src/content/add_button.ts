@@ -1,73 +1,88 @@
-const videosContainer = document.querySelector("ytd-rich-grid-renderer");
-
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    if (mutation.addedNodes.length) {
-      createButton();
-    }
-  });
-});
-
-const observerConfig = {
-  childList: true,
-  subtree: true,
-};
-
-if (videosContainer) {
-  observer.observe(videosContainer, observerConfig);
-}
-
-function createButton() {
-  const lists = document.querySelectorAll("#metadata-line");
+function createButton(target: Element) {
+  const lists = target.querySelectorAll("#metadata-line");
 
   lists.forEach((list) => {
-    const spanContainer = document.createElement("span");
-    const button = document.createElement("button");
-    const img = document.createElement("img");
+    const buttonExists = list.querySelector(".g-button");
 
-    spanContainer.classList.add(
-      "inline-metadata-item",
-      "style-scope",
-      "ytd-video-meta-block",
-      "g-container",
-    );
+    if (buttonExists) return;
+    else {
+      const spanContainer = document.createElement("span");
+      const button = document.createElement("button");
+      const img = document.createElement("img");
 
-    button.classList.add("g-button");
+      spanContainer.classList.add(
+        "inline-metadata-item",
+        "style-scope",
+        "ytd-video-meta-block",
+        "g-container",
+      );
 
-    img.src = chrome.runtime.getURL("icons/icon128.png");
-    img.classList.add("g-icon");
+      button.classList.add("g-button");
 
-    button.appendChild(img);
-    spanContainer.appendChild(button);
-    list.appendChild(spanContainer);
+      img.src = chrome.runtime.getURL("icons/icon128.png");
+      img.classList.add("g-icon");
 
-    const videoContainer = list.closest(
-      "ytd-rich-grid-media, ytd-video-renderer",
-    );
+      button.appendChild(img);
+      spanContainer.appendChild(button);
+      list.appendChild(spanContainer);
 
-    const linkElement = videoContainer?.querySelector("a#thumbnail");
-    const videoUrl = linkElement
-      ? `https://www.youtube.com${linkElement.getAttribute("href")}`
-      : null;
+      const videoContainer = list.closest(
+        "ytd-rich-grid-media, ytd-video-renderer",
+      );
 
-    const titleElement = videoContainer?.querySelector("#video-title");
-    const videoTitle =
-      titleElement && titleElement.textContent
-        ? titleElement.textContent.trim()
-        : "Unknown Title";
+      const linkElement = videoContainer?.querySelector("a#thumbnail");
+      const videoUrl = linkElement
+        ? `https://www.youtube.com${linkElement.getAttribute("href")}`
+        : null;
 
-    button.addEventListener("click", () => {
-      if (videoUrl) {
-        chrome.runtime.sendMessage({
-          action: "openPopup",
-          url: videoUrl,
-          title: videoTitle,
-        });
-      } else {
-        console.error("Could not get video URL");
-      }
-    });
+      const titleElement = videoContainer?.querySelector("#video-title");
+      const videoTitle =
+        titleElement && titleElement.textContent
+          ? titleElement.textContent.trim()
+          : "Unknown Title";
+
+      button.addEventListener("click", () => {
+        if (videoUrl) {
+          chrome.storage.local.get("popupIsOpen", (result) => {
+            if (!result.popupIsOpen) {
+              chrome.runtime.sendMessage({
+                action: "openPopup",
+                url: videoUrl,
+                title: videoTitle,
+              });
+            } else {
+              chrome.runtime.sendMessage({ action: "closePopup" });
+            }
+          });
+        }
+      });
+    }
   });
 }
 
-createButton();
+function waitForElement(
+  selector: string,
+  callback: (element: Element) => void,
+) {
+  const target = document.querySelector(selector);
+  if (target) {
+    callback(target);
+  } else {
+    const observer = new MutationObserver((mutations, obs) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        obs.disconnect();
+        callback(element);
+      }
+    });
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+}
+
+waitForElement("#contents", (target) => {
+  const observer = new MutationObserver(() => {
+    createButton(target);
+  });
+
+  observer.observe(target, { childList: true, subtree: true });
+});

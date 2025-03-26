@@ -11,14 +11,17 @@ db.version(1).stores({
   folders: "++id, name, created_at",
 });
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "openPopup") {
     chrome.storage.local.set(
       { videoUrl: message.url, videoTitle: message.title },
       () => {
+        chrome.storage.local.set({ popupIsOpen: true });
         chrome.action.openPopup();
       },
     );
+  } else if (message.action === "closePopup") {
+    chrome.storage.local.set({ popupIsOpen: false });
   }
 });
 

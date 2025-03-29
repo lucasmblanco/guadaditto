@@ -64,22 +64,25 @@ function waitForElement(
   selector: string,
   callback: (element: Element) => void,
 ) {
-  const target = document.querySelector(selector);
-  if (target) {
-    callback(target);
+  const targets = document.querySelectorAll(selector);
+  if (targets.length >= 2) {
+    targets.forEach((target) => callback(target));
+    // callback(target);
   } else {
     const observer = new MutationObserver((mutations, obs) => {
-      const element = document.querySelector(selector);
-      if (element) {
+      const elements = document.querySelectorAll(selector);
+      if (elements.length === 1) {
+        elements.forEach((target) => callback(target));
+      } else if (elements.length >= 2) {
+        elements.forEach((target) => callback(target));
         obs.disconnect();
-        callback(element);
       }
     });
     observer.observe(document.body, { childList: true, subtree: true });
   }
 }
 
-waitForElement("#contents", (target) => {
+waitForElement("#contents.ytd-rich-grid-renderer", (target) => {
   const observer = new MutationObserver(() => {
     createButton(target);
   });

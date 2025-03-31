@@ -94,9 +94,18 @@
   {/if}
 </header>
 <main class="p-3 pt-0">
-  <h1 class="font-main text-accent-ditto pb-4 text-2xl opacity-50 select-none">
-    guardaditto
-  </h1>
+  <div class="flex flex-col items-center justify-center text-center">
+    <img
+      src="/g-logo.svg"
+      alt=""
+      class="text-accent-ditto w-5 pb-4 opacity-50 select-none"
+    />
+    <!-- <h1
+      class="font-main text-accent-ditto pb-4 text-2xl opacity-50 select-none"
+    >
+      guardaditto
+    </h1> -->
+  </div>
   {#if !openSettings}
     <form
       class="flex items-center justify-between gap-2"

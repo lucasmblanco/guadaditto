@@ -59,5 +59,5 @@
   </ul>
 </main>
 <foooter class="flex justify-center opacity-20 select-none"
-  >{`${VERSION} @ 2025`}</foooter
+  >{`guardaditto v${VERSION} @ 2025`}</foooter
 >

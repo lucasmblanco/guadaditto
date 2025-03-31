@@ -44,11 +44,13 @@
     {/each}
   {:else}
     <div class="grid h-full min-w-0 grid-flow-col place-items-center">
-      <div
-        class="grid min-w-0 grid-flow-row place-items-center gap-1 opacity-50"
-      >
-        <HeartCrack class="text-accent-ditto" size={50} />
-        <p class="text-accent-ditto text-base font-bold">So empty...</p>
+      <div class="grid min-w-0 grid-flow-row place-items-center opacity-50">
+        <HeartCrack
+          class="text-accent-ditto"
+          strokeWidth={2}
+          absoluteStrokeWidth={true}
+        />
+        <p class="text-accent-ditto font-main text-base italic">So empty...</p>
       </div>
     </div>
   {/if}

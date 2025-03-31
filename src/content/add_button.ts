@@ -65,17 +65,13 @@ function waitForElement(
   callback: (element: Element) => void,
 ) {
   const targets = document.querySelectorAll(selector);
-  if (targets.length >= 2) {
+  if (targets.length >= 1) {
     targets.forEach((target) => callback(target));
-    // callback(target);
   } else {
     const observer = new MutationObserver((mutations, obs) => {
       const elements = document.querySelectorAll(selector);
-      if (elements.length === 1) {
+      if (elements.length >= 1) {
         elements.forEach((target) => callback(target));
-      } else if (elements.length >= 2) {
-        elements.forEach((target) => callback(target));
-        obs.disconnect();
       }
     });
     observer.observe(document.body, { childList: true, subtree: true });

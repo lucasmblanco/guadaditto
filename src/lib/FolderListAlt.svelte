@@ -4,19 +4,27 @@
   import { db } from "../background/background";
   import { onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { selectFolder } from "../utils/utils";
+  import type { SelectedFolder } from "../types";
 
   let scrollContainer = $state<HTMLElement | null>(null);
   let showLeftGradient = $state(false);
   let showRightGradient = $state(false);
-  let { resize = $bindable(), selectedFolder, showExistingFolders } = $props();
+  let {
+    resize = $bindable(),
+    selectedFolder,
+    showExistingFolders,
+  }: {
+    selectedFolder: SelectedFolder;
+    showExistingFolders: boolean;
+    resize?: boolean;
+  } = $props();
 
   let folders = liveQuery(() => db.folders.toArray());
 
   function handleScroll() {
-    if (scrollContainer !== null) {
+    if (scrollContainer) {
       requestAnimationFrame(() => {
-        const { scrollLeft, scrollWidth, clientWidth } = scrollContainer;
+        const { scrollLeft, scrollWidth, clientWidth } = scrollContainer!;
         showLeftGradient = Math.ceil(scrollLeft) > 0;
         showRightGradient =
           Math.ceil(scrollLeft) < scrollWidth - clientWidth - 1;
@@ -83,7 +91,12 @@
           for={folder.name}
           ><input
             onclick={() =>
-              selectFolder(folder, selectedFolder, showExistingFolders)}
+              // selectFolder(folder, selectedFolder, showExistingFolders)
+              {
+                selectedFolder.id = folder.id;
+                selectedFolder.name = folder.name;
+                showExistingFolders = false;
+              }}
             hidden
             type="radio"
             name="folder"

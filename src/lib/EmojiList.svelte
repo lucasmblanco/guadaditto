@@ -5,7 +5,8 @@
 
   let { showEmojiOptions = $bindable(), resize = $bindable() } = $props();
 
-  let emojisCat = {};
+  let emojisCat: { [key: string]: Array<{ emoji: string; category: string }> } =
+    {};
   let activeCategory = $state("Smileys & Emotion");
 
   emojiData["emojis"].forEach((emoji) => {
@@ -16,13 +17,14 @@
     emojisCat[emoji.category].push(emoji);
   });
 
-  function setActiveCategory(category) {
+  function setActiveCategory(category: string) {
     activeCategory = category;
   }
-  async function createFolder(e) {
+  async function createFolder(e: Event) {
+    const name = (e.target as HTMLButtonElement).value;
     showEmojiOptions = false;
     await db.folders.add({
-      name: e.target.value,
+      name,
       created_at: new Date(),
     });
     resize = true;

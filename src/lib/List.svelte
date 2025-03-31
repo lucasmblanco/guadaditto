@@ -5,8 +5,15 @@
   import { HeartCrack, Trash2, Youtube } from "lucide-svelte";
   import { flip } from "svelte/animate";
   import { slide } from "svelte/transition";
+  import type { SelectedFolder } from "../types";
 
-  let { selectedFolder = $bindable(), checkedDefault = $bindable() } = $props();
+  let {
+    selectedFolder = $bindable(),
+    checkedDefault = $bindable(),
+  }: {
+    selectedFolder: SelectedFolder;
+    checkedDefault?: boolean;
+  } = $props();
 
   let videos = $derived.by(() => {
     if (selectedFolder.id === null) {
@@ -16,7 +23,7 @@
       });
     } else {
       return liveQuery(() =>
-        db.videos.where("folder_id").equals(selectedFolder.id).toArray(),
+        db.videos.where("folder_id").equals(selectedFolder.id!).toArray(),
       );
     }
   });
@@ -51,8 +58,10 @@
       class="sticky -bottom-1 left-1/2 mt-1 w-fit -translate-x-1/2 transform rounded-t-full bg-red-400 p-2 text-black saturate-50 hover:saturate-100"
       onclick={() => {
         checkedDefault = true;
-        db.folders.where("id").equals(selectedFolder.id).delete();
-        selectedFolder = { id: null, name: "" }; // dont interact direclty
+        db.folders.where("id").equals(selectedFolder.id!).delete();
+        // selectFolder(null, selectedFolder, true);
+        selectedFolder.id = null;
+        selectedFolder.name = "";
       }}
     >
       <Trash2 size={15} />

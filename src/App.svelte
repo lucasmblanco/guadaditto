@@ -6,14 +6,22 @@
   import List from "./lib/List.svelte";
   import EmojiList from "./lib/EmojiList.svelte";
   import { onMount } from "svelte";
-  import { urlChecker, extractVideoTitle, selectFolder } from "./utils/utils";
+  import {
+    urlChecker,
+    extractVideoTitle,
+    updateNotificationBadge,
+  } from "./utils/utils";
   import SettingsPage from "./lib/SettingsPage.svelte";
+  import type { SelectedFolder } from "./types";
 
   let showExistingFolders = $state(false);
   let showEmojiOptions = $state(false);
   let url = $state("");
   let title = $state("");
-  let selectedFolder = $state({ id: null, name: "" });
+  let selectedFolder: SelectedFolder = $state({
+    id: null,
+    name: "",
+  });
   let resize = $state(false);
   let checkedDefault = $state(true);
   let enableSubmit = $state(false);
@@ -43,23 +51,15 @@
   };
 
   onMount(async () => {
-    const videosQnty = await db.videos.count();
-
-    if (videosQnty > 0) {
-      chrome.action.setBadgeText({ text: videosQnty.toString() });
-    } else {
-      chrome.action.setBadgeText({ text: "" });
-    }
-
     fetchTabData();
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: Event) => {
     e.preventDefault();
     try {
       await db.videos.add({
         title: title,
-        folder_id: selectedFolder.id ?? null,
+        folder_id: selectedFolder ? selectedFolder.id : null,
         url: url,
         created_at: new Date(),
       });
@@ -68,14 +68,7 @@
       const lastElement = listVideoElements[listVideoElements.length - 1];
       lastElement.scrollIntoView({ behavior: "smooth" });
 
-      const videosQnty = await db.videos.count();
-
-      if (videosQnty > 0) {
-        chrome.action.setBadgeText({ text: videosQnty.toString() });
-        chrome.action.setBadgeBackgroundColor({ color: "#68f2b2" });
-      } else {
-        chrome.action.setBadgeText({ text: "" });
-      }
+      await updateNotificationBadge(db);
     } catch (error) {
       console.error("Error adding video", error);
     }
@@ -128,7 +121,7 @@
             ? 'bg-primary-ditto'
             : ''} border-accent-ditto ring-offset-background focus-visible:ring-ring hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 cursor-pointer gap-2 rounded-full text-center text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
         >
-          {#if selectedFolder.id}
+          {#if selectedFolder && selectedFolder.id}
             {selectedFolder.name}
           {:else}
             <FolderInput class="text-xs" />

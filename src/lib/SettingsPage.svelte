@@ -1,7 +1,8 @@
 <script lang="ts">
   import { db } from "../background/background";
-  import { importDB, exportDB, importInto } from "dexie-export-import";
+  import { exportDB, importInto } from "dexie-export-import";
   import { VERSION } from "../version";
+  import { updateNotificationBadge } from "../utils/utils";
 
   const options = {
     acceptVersionDiff: true, // Ignore version differences between databases
@@ -9,13 +10,15 @@
     clearTablesBeforeImport: false, // Do not clear tables before importing
   };
 
-  async function handleImport(e) {
-    const file = e.target.files[0];
+  async function handleImport(e: Event) {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
     if (!file) return;
     try {
       const blobFile = new Blob([file], { type: "application/json" });
       await importInto(db, blobFile, options);
-      // refresh badge
+
+      await updateNotificationBadge(db);
     } catch {
       console.log("Error importing database");
     }

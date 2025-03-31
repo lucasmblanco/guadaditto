@@ -10,7 +10,7 @@
   import { db } from "../background/background";
   import { onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { selectFolder } from "../utils/utils";
+  import type { SelectedFolder } from "../types";
 
   let scrollContainer = $state<HTMLElement | null>(null);
   let showLeftGradient = $state(false);
@@ -20,6 +20,11 @@
     showExistingFolders,
     showEmojiOptions = $bindable(),
     resize = $bindable(),
+  }: {
+    selectedFolder: SelectedFolder;
+    showExistingFolders: boolean;
+    showEmojiOptions?: boolean;
+    resize?: boolean;
   } = $props();
 
   let folders = liveQuery(() => db.folders.toArray());
@@ -75,7 +80,10 @@
       ><input
         checked={selectedFolder.id === null}
         onclick={() => {
-          selectFolder(null, selectedFolder, showExistingFolders);
+          // selectFolder(null, selectedFolder, showExistingFolders);
+          selectedFolder.id = null;
+          selectedFolder.name = "";
+          showExistingFolders = false;
           showEmojiOptions = false;
         }}
         defaultChecked={true}
@@ -108,7 +116,10 @@
             ><input
               checked={folder.id === selectedFolder.id}
               onclick={() => {
-                selectFolder(folder, selectedFolder, showExistingFolders);
+                // selectFolder(folder, selectedFolder, showExistingFolders);
+                selectedFolder.id = folder.id;
+                selectedFolder.name = folder.name;
+                showExistingFolders = false;
                 showEmojiOptions = false;
               }}
               hidden
@@ -122,6 +133,9 @@
       {:else}
         <CircleDashed
           class="text-primary-ditto h-10 w-10 text-2xl opacity-40"
+        />
+        <CircleDashed
+          class="text-primary-ditto h-10 w-10 text-2xl opacity-20"
         />
       {/if}
     </div>

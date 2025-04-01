@@ -13,6 +13,7 @@
   } from "./utils/utils";
   import SettingsPage from "./lib/SettingsPage.svelte";
   import type { SelectedFolder } from "./types";
+  import { t, locale } from "./i8n/i8n.svelte";
 
   let showExistingFolders = $state(false);
   let showEmojiOptions = $state(false);
@@ -43,14 +44,19 @@
           enableSubmit = true;
           url = tab.url;
           title = extractVideoTitle(tab.title as string) || "";
-        } else {
-          title = "Not on a YouTube video page";
         }
       }
     });
   };
 
   onMount(async () => {
+    chrome.storage.local.get(["lang"], (data) => {
+      if (data.lang) {
+        locale.lang = data.lang;
+      } else {
+        chrome.storage.local.set({ lang: "en" });
+      }
+    });
     fetchTabData();
   });
 
@@ -117,6 +123,7 @@
         disabled
         name="url"
         type="text"
+        placeholder={t("input.placeholder")}
         class="border-accent-ditto bg-primary-ditto ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring col-span-4 flex h-8 w-full rounded-full border px-2 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       />
       <div class="flex gap-2">

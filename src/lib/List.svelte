@@ -6,6 +6,7 @@
   import { flip } from "svelte/animate";
   import { slide } from "svelte/transition";
   import type { SelectedFolder } from "../types";
+  import { t } from "../i8n/i8n.svelte";
 
   let {
     selectedFolder = $bindable(),
@@ -50,7 +51,9 @@
           strokeWidth={2}
           absoluteStrokeWidth={true}
         />
-        <p class="text-accent-ditto font-main text-base italic">So empty...</p>
+        <p class="text-accent-ditto font-main text-base italic">
+          {t("homepage.empty")}
+        </p>
       </div>
     </div>
   {/if}

@@ -3,6 +3,8 @@
   import { exportDB, importInto } from "dexie-export-import";
   import { VERSION } from "../version";
   import { updateNotificationBadge } from "../utils/utils";
+  import { t, locales, locale } from "../i8n/i8n.svelte"; // Assuming locale is a writable store
+  import { onMount } from "svelte";
 
   const options = {
     acceptVersionDiff: true, // Ignore version differences between databases
@@ -41,23 +43,65 @@
       console.error("" + error);
     }
   }
+
+  // onMount(() => {
+  //   chrome.storage.local.get(["lang"], (data) => {
+  //     if (data.lang) {
+  //       langSelected = data.lang;
+  //     }
+  //   });
+  // });
 </script>
 
 <main class="h-[270px] p-3 pt-0">
   <ul class="flex flex-col items-start gap-2">
+    <li class="flex w-full justify-center gap-2">
+      {#each locales as l}
+        <button
+          class="{l === locale.lang
+            ? 'bg-primary-ditto'
+            : ''} text-bold border-accent-ditto ring-offset-background focus-visible:ring-ring hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-accent-ditto inline-flex h-8 w-8 items-center justify-center gap-2 rounded-full border text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:pointer-events-none disabled:opacity-50 has-[:checked]:border-1 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          onclick={(e) => {
+            const target = e.target as HTMLSelectElement | null;
+            if (target) {
+              locale.lang = target.value;
+              chrome.storage.local.set({ lang: target.value });
+            }
+          }}
+          value={l}>{l}</button
+        >
+      {/each}
+    </li>
     <li>
       <label class="hover:text-accent-ditto">
-        Import database
+        {t("settings.import")}
         <input type="file" class="hidden" onchange={handleImport} />
       </label>
     </li>
     <li>
       <button onclick={handleExport} class="hover:text-accent-ditto"
-        >Export database</button
+        >{t("settings.export")}</button
       >
     </li>
+    <!-- <li>
+      <select
+        onchange={(e) => {
+          const target = e.target as HTMLSelectElement | null;
+          if (target) {
+            locale.lang = target.value;
+          }
+        }}
+      >
+        {#each locales as l}
+          <option value={l}>{l}</option>
+        {/each}
+      </select>
+    </li> -->
   </ul>
 </main>
 <foooter class="flex justify-center opacity-20 select-none"
-  >{`guardaditto v${VERSION} @ 2025`}</foooter
+  ><span class="font-main"
+    >guardaditto <span class="font-secondary">{`v${VERSION} @ 2025`}</span
+    ></span
+  ></foooter
 >

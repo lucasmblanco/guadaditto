@@ -85,13 +85,17 @@
   class="p flex {openSettings ? 'justify-start' : 'justify-end'} px-2 pt-2"
 >
   {#if openSettings}
-    <button onclick={() => (openSettings = !openSettings)}
+    <button
+      title={t("button.back_home")}
+      onclick={() => (openSettings = !openSettings)}
       ><ChevronLeft
         class="text-accent-ditto saturate-25 hover:saturate-100"
         size={16}
       /></button
     >{:else}
-    <button onclick={() => (openSettings = !openSettings)}
+    <button
+      title={t("button.settings")}
+      onclick={() => (openSettings = !openSettings)}
       ><Settings
         class="text-accent-ditto saturate-25 hover:saturate-100"
         size={16}
@@ -128,6 +132,7 @@
       />
       <div class="flex gap-2">
         <button
+          title={t("button.assign_folder")}
           disabled={!enableSubmit}
           type="button"
           onclick={() => {
@@ -144,6 +149,7 @@
           {/if}
         </button>
         <button
+          title={t("button.add_video")}
           disabled={!enableSubmit}
           type="submit"
           class="border-accent-ditto ring-offset-background focus-visible:ring-ring not-first:hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 inline-flex h-8 w-8 cursor-pointer items-center justify-center gap-2 rounded-full border text-center text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"

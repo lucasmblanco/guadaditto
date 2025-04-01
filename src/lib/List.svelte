@@ -60,6 +60,7 @@
   {#if selectedFolder.id}
     <div class="mt-auto"></div>
     <button
+      title={t("button.delete_folder")}
       class="sticky -bottom-1 left-1/2 mt-1 w-fit -translate-x-1/2 transform rounded-t-full bg-red-400 p-2 text-black saturate-50 hover:saturate-100"
       onclick={() => {
         checkedDefault = true;

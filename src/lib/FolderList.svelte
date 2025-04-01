@@ -11,6 +11,7 @@
   import { onMount } from "svelte";
   import { slide } from "svelte/transition";
   import type { SelectedFolder } from "../types";
+  import { t } from "../i8n/i8n.svelte";
 
   let scrollContainer = $state<HTMLElement | null>(null);
   let showLeftGradient = $state(false);
@@ -75,6 +76,7 @@
 >
   <div class=" grid min-w-0 grid-flow-col items-center gap-2">
     <label
+      title={t("button.no_folder")}
       class="border-accent-ditto ring-offset-background focus-visible:ring-ring hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-accent-ditto inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full border text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:pointer-events-none disabled:opacity-50 has-[:checked]:border-1 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
       for="no_folder"
       ><input
@@ -111,6 +113,7 @@
       {#if $folders && $folders.length > 0}
         {#each $folders as folder (folder.id)}
           <label
+            title={t("button.with_folder", { folder: folder.name })}
             class="border-accent-ditto font-emoji ring-offset-background focus-visible:ring-ring // hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-accent-ditto inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full border text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 has-[:checked]:border-1 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
             for={folder.id + folder.name}
             ><input
@@ -150,6 +153,7 @@
     {/if}
   </div>
   <button
+    title={t("button.create_folder")}
     onclick={() => {
       showEmojiOptions = !showEmojiOptions;
     }}

@@ -12,7 +12,7 @@
   let {
     resize = $bindable(),
     selectedFolder,
-    showExistingFolders,
+    showExistingFolders = $bindable(),
   }: {
     selectedFolder: SelectedFolder;
     showExistingFolders: boolean;

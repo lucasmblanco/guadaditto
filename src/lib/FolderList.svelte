@@ -18,12 +18,10 @@
   let showRightGradient = $state(false);
   let {
     selectedFolder,
-    showExistingFolders,
     showEmojiOptions = $bindable(),
     resize = $bindable(),
   }: {
     selectedFolder: SelectedFolder;
-    showExistingFolders: boolean;
     showEmojiOptions?: boolean;
     resize?: boolean;
   } = $props();
@@ -82,10 +80,8 @@
       ><input
         checked={selectedFolder.id === null}
         onclick={() => {
-          // selectFolder(null, selectedFolder, showExistingFolders);
           selectedFolder.id = null;
           selectedFolder.name = "";
-          showExistingFolders = false;
           showEmojiOptions = false;
         }}
         defaultChecked={true}

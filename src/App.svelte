@@ -159,14 +159,9 @@
     </form>
     <div class="relative h-14">
       {#if showExistingFolders}
-        <FolderListAlt {selectedFolder} {showExistingFolders} bind:resize />
+        <FolderListAlt {selectedFolder} bind:showExistingFolders bind:resize />
       {:else}
-        <FolderList
-          {selectedFolder}
-          {showExistingFolders}
-          bind:showEmojiOptions
-          bind:resize
-        />
+        <FolderList {selectedFolder} bind:showEmojiOptions bind:resize />
       {/if}
     </div>
     <div class="relative h-50">

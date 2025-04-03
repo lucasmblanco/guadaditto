@@ -14,6 +14,8 @@ button.g-button {
   bottom: 0;
   z-index: 100;
   width: fit-content;
+  padding-inline: 1rem;
+  padding-block: 0.5rem;
 }
 
 button.g-button:hover {

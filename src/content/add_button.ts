@@ -3,6 +3,7 @@ function elementMatchesSelectors(element) {
     "div.ytd-rich-grid-renderer:nth-child(6)",
     "ytd-browse.style-scope:nth-child(3) > ytd-two-column-browse-results-renderer:nth-child(11) > div:nth-child(1) > ytd-rich-grid-renderer:nth-child(1) > div:nth-child(6)",
     "ytd-two-column-browse-results-renderer.grid-5-columns > div:nth-child(1) > ytd-rich-grid-renderer:nth-child(1) > div:nth-child(6)",
+    "ytd-item-section-renderer.ytd-watch-next-secondary-results-renderer > div:nth-child(3)",
   ];
 
   return selectors.some((selector) => {
@@ -18,6 +19,7 @@ function checkAddedNodes(addedNodes) {
   for (const node of addedNodes) {
     if (node.nodeType === Node.ELEMENT_NODE) {
       if (elementMatchesSelectors(node)) {
+        console.log("Elemento encontrado:", node);
         const observer = new MutationObserver(() => {
           createButton(node);
         });
@@ -82,39 +84,56 @@ if (document.readyState === "loading") {
 // Ejemplo de cómo detener el observer después de un tiempo
 // setTimeout(stopObserving, 60000); // Detener después de 1 minuto
 
+//ytd-compact-video-renderer.style-scope:nth-child(1) > div:nth-child(1) > div:nth-child(2) > div:nth-child(1) > a:nth-child(1) > div:nth-child(2) > ytd-video-meta-block:nth-child(1) > div:nth-child(1) > div:nth-child(2)
+// ytd-browse.style-scope:nth-child(2) > ytd-two-column-browse-results-renderer:nth-child(11) > div:nth-child(1) > ytd-rich-grid-renderer:nth-child(1) > div:nth-child(6) > ytd-rich-item-renderer:nth-child(3) > div:nth-child(1) > ytd-rich-grid-media:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > ytd-video-meta-block:nth-child(2) > div:nth-child(1) > div:nth-child(2)
+// ytd-browse.style-scope:nth-child(3) > ytd-two-column-browse-results-renderer:nth-child(11) > div:nth-child(1) > ytd-rich-grid-renderer:nth-child(1) > div:nth-child(6) > ytd-rich-item-renderer:nth-child(7) > div:nth-child(1) > ytd-rich-grid-media:nth-child(1) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2) > ytd-video-meta-block:nth-child(2) > div:nth-child(1) > div:nth-child(2)
 function createButton(target: Element) {
-  const lists = target.querySelectorAll("#metadata-line");
+  // const lists = target.querySelectorAll("#metadata-line");
+  //#dismissible
+  const lists = target.querySelectorAll("#dismissible");
 
   lists.forEach((list) => {
     const buttonExists = list.querySelector(".g-button");
+    // const firstEl = list.querySelector("#metadata-line > span:nth-child(3)");
 
     if (buttonExists) {
       console.log("Button already exists, skipping creation.");
       return;
     } else {
-      const spanContainer = document.createElement("span");
+      // const spanContainer = document.createElement("span");
       const button = document.createElement("button");
       const img = document.createElement("img");
 
-      spanContainer.classList.add(
-        "inline-metadata-item",
-        "style-scope",
-        "ytd-video-meta-block",
-        "g-container",
-      );
+      // spanContainer.classList.add(
+      //   // "inline-metadata-item",
+      //   // "style-scope",
+      //   // "ytd-video-meta-block",
+      //   "g-container",
+      // );
 
       button.classList.add("g-button");
 
       img.src = chrome.runtime.getURL("icons/icon128.png");
       img.classList.add("g-icon");
-
+      list.style.position = "relative";
       button.appendChild(img);
-      spanContainer.appendChild(button);
-      list.appendChild(spanContainer);
+      list.appendChild(button);
+      // spanContainer.appendChild(button);
+      // list.appendChild(spanContainer);
+      // detailEl?.appendChild(spanContainer);
 
-      const videoContainer = list.closest(
+      let videoContainer = list.closest(
         "ytd-rich-grid-media, ytd-video-renderer",
       );
+
+      const videoRelatedContainer = list.closest(
+        "ytd-compact-video-renderer, ytd-video-renderer",
+      );
+
+      if (videoRelatedContainer) {
+        videoContainer = videoRelatedContainer;
+      }
+      //ytd-compact-video-renderer
 
       const linkElement = videoContainer?.querySelector("a#thumbnail");
       const videoUrl = linkElement
@@ -127,7 +146,8 @@ function createButton(target: Element) {
           ? titleElement.textContent.trim()
           : "Unknown Title";
 
-      button.addEventListener("click", () => {
+      button.addEventListener("click", (e) => {
+        e.stopPropagation();
         if (videoUrl) {
           chrome.storage.local.get("popupIsOpen", (result) => {
             if (!result.popupIsOpen) {
@@ -140,6 +160,8 @@ function createButton(target: Element) {
               chrome.runtime.sendMessage({ action: "closePopup" });
             }
           });
+        } else {
+          console.log("Video URL not found.");
         }
       });
     }

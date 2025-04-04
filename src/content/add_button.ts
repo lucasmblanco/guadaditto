@@ -67,8 +67,6 @@ function createButton(target: HTMLElement) {
   }
 
   containers.forEach((container) => {
-    let videoUrl;
-    let videoTitle;
     const dismissibleElement =
       container.querySelector<HTMLElement>("#dismissible");
 
@@ -80,20 +78,20 @@ function createButton(target: HTMLElement) {
       dismissibleElement.querySelector<HTMLElement>(".g-button");
 
     if (buttonExists) {
-      const linkElement = container?.querySelector("a#thumbnail");
-      videoUrl = linkElement
-        ? `https://www.youtube.com${linkElement.getAttribute("href")}`
-        : null;
+      // const linkElement = container?.querySelector("a#thumbnail");
+      // videoUrl = linkElement
+      //   ? `https://www.youtube.com${linkElement.getAttribute("href")}`
+      //   : null;
 
-      const titleElement = container?.querySelector("#video-title");
-      videoTitle =
-        titleElement && titleElement.textContent
-          ? titleElement.textContent.trim()
-          : "Unknown Title";
+      // const titleElement = container?.querySelector("#video-title");
+      // videoTitle =
+      //   titleElement && titleElement.textContent
+      //     ? titleElement.textContent.trim()
+      //     : "Unknown Title";
 
-      buttonExists.addEventListener("click", (e) =>
-        addOpenPopupFunctionality(e, videoUrl, videoTitle),
-      );
+      // buttonExists.addEventListener("click", (e) =>
+      //   addOpenPopupFunctionality(e, videoUrl, videoTitle),
+      // );
 
       return;
     } else {
@@ -120,26 +118,42 @@ function createButton(target: HTMLElement) {
       //   videoContainer = videoRelatedContainer;
       // }
 
-      const linkElement = container?.querySelector("a#thumbnail");
-      videoUrl = linkElement
-        ? `https://www.youtube.com${linkElement.getAttribute("href")}`
-        : null;
-
-      const titleElement = container?.querySelector("#video-title");
-      videoTitle =
-        titleElement && titleElement.textContent
-          ? titleElement.textContent.trim()
-          : "Unknown Title";
-
       button.addEventListener("click", (e) =>
-        addOpenPopupFunctionality(e, videoUrl, videoTitle),
+        addOpenPopupFunctionality(e, container),
       );
     }
   });
 }
 
-function addOpenPopupFunctionality(e, videoUrl, videoTitle) {
+// function addOpenPopupFunctionality(e, videoUrl, videoTitle) {
+//   e.stopPropagation();
+//   if (videoUrl) {
+//     chrome.storage.local.get("popupIsOpen", (result) => {
+//       if (!result.popupIsOpen) {
+//         chrome.runtime.sendMessage({
+//           action: "openPopup",
+//           url: videoUrl,
+//           title: videoTitle,
+//         });
+//       } else {
+//         chrome.runtime.sendMessage({ action: "closePopup" });
+//       }
+//     });
+//   }
+// }
+
+function addOpenPopupFunctionality(e, container) {
   e.stopPropagation();
+  const linkElement = container.querySelector("a#thumbnail");
+  const videoUrl = linkElement
+    ? `https://www.youtube.com${linkElement.getAttribute("href")}`
+    : null;
+
+  const titleElement = container.querySelector("#video-title");
+  const videoTitle =
+    titleElement && titleElement.textContent
+      ? titleElement.textContent.trim()
+      : "Unknown Title";
   if (videoUrl) {
     chrome.storage.local.get("popupIsOpen", (result) => {
       if (!result.popupIsOpen) {

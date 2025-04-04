@@ -1,28 +1,19 @@
-##TODO
+# Guardaditto
 
-- [x] Add IndexedDB
-- [x] Fix styling
-- [x] Add url and title grabber, handle when changing windows
-- [x] add emoji input for folder
-- [x] Add Folder list component
-- [x] add delete folder button
-- [x] add "add button" from youtube ui
-- [x] add empty message in list component
+Descrip TODO
 
---
+## Funcionalidades
 
-- [x] scroll to the to the last video added in the list
-- [x] add share link button
+TODO
 
---
+## Donde aparece
 
-- [x] add notification indicating the number of videos saved (toggle on/off)
-- [ ] add sort button
-- [ ] add firefox support
-- [ ] transfer data browser to browser
+TODO
 
-.5 early relase
-.6 quantity videos badge
-.7 draggable bar + sorting
-.8 options menu + languages + import/export csv
-.9 add multiple browser support
+## Navegadores compatibles
+
+TODO
+
+## Roadmap
+
+TODO

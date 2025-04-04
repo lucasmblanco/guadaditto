@@ -2,12 +2,31 @@ span.g-container {
   display: flex !important;
 }
 button.g-button {
-  background: #0f0f0f;
+  background: transparent;
   border: none;
   padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font: inherit;
   cursor: pointer;
   outline: inherit;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  /* */
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 100;
+  width: fit-content;
+  width: 40px;
+  height: 40px;
+  /* padding-inline: 1rem;
+  padding-block: 0.75rem; */
+}
+
+button.g-button:hover {
+  background-color: #3924437e;
 }
 
 button.g-button:hover {

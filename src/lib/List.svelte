@@ -5,8 +5,16 @@
   import { HeartCrack, Trash2, Youtube } from "lucide-svelte";
   import { flip } from "svelte/animate";
   import { slide } from "svelte/transition";
+  import type { SelectedFolder } from "../types";
+  import { t } from "../i8n/i8n.svelte";
 
-  let { selectedFolder = $bindable(), checkedDefault = $bindable() } = $props();
+  let {
+    selectedFolder = $bindable(),
+    checkedDefault = $bindable(),
+  }: {
+    selectedFolder: SelectedFolder;
+    checkedDefault?: boolean;
+  } = $props();
 
   let videos = $derived.by(() => {
     if (selectedFolder.id === null) {
@@ -16,7 +24,7 @@
       });
     } else {
       return liveQuery(() =>
-        db.videos.where("folder_id").equals(selectedFolder.id).toArray(),
+        db.videos.where("folder_id").equals(selectedFolder.id!).toArray(),
       );
     }
   });
@@ -37,22 +45,29 @@
     {/each}
   {:else}
     <div class="grid h-full min-w-0 grid-flow-col place-items-center">
-      <div
-        class="grid min-w-0 grid-flow-row place-items-center gap-1 opacity-50"
-      >
-        <HeartCrack class="text-accent-ditto" size={50} />
-        <p class="text-accent-ditto text-base font-bold">So empty...</p>
+      <div class="grid min-w-0 grid-flow-row place-items-center opacity-50">
+        <HeartCrack
+          class="text-accent-ditto"
+          strokeWidth={2}
+          absoluteStrokeWidth={true}
+        />
+        <p class="text-accent-ditto font-main text-base italic">
+          {t("homepage.empty")}
+        </p>
       </div>
     </div>
   {/if}
   {#if selectedFolder.id}
     <div class="mt-auto"></div>
     <button
+      title={t("button.delete_folder")}
       class="sticky -bottom-1 left-1/2 mt-1 w-fit -translate-x-1/2 transform rounded-t-full bg-red-400 p-2 text-black saturate-50 hover:saturate-100"
       onclick={() => {
         checkedDefault = true;
-        db.folders.where("id").equals(selectedFolder.id).delete();
-        selectedFolder = { id: null, name: "" }; // dont interact direclty
+        db.folders.where("id").equals(selectedFolder.id!).delete();
+        // selectFolder(null, selectedFolder, true);
+        selectedFolder.id = null;
+        selectedFolder.name = "";
       }}
     >
       <Trash2 size={15} />

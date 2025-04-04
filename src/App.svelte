@@ -6,14 +6,23 @@
   import List from "./lib/List.svelte";
   import EmojiList from "./lib/EmojiList.svelte";
   import { onMount } from "svelte";
-  import { urlChecker, extractVideoTitle, selectFolder } from "./utils/utils";
+  import {
+    urlChecker,
+    extractVideoTitle,
+    updateNotificationBadge,
+  } from "./utils/utils";
   import SettingsPage from "./lib/SettingsPage.svelte";
+  import type { SelectedFolder } from "./types";
+  import { t, locale } from "./i8n/i8n.svelte";
 
   let showExistingFolders = $state(false);
   let showEmojiOptions = $state(false);
   let url = $state("");
   let title = $state("");
-  let selectedFolder = $state({ id: null, name: "" });
+  let selectedFolder: SelectedFolder = $state({
+    id: null,
+    name: "",
+  });
   let resize = $state(false);
   let checkedDefault = $state(true);
   let enableSubmit = $state(false);
@@ -35,31 +44,28 @@
           enableSubmit = true;
           url = tab.url;
           title = extractVideoTitle(tab.title as string) || "";
-        } else {
-          title = "Not on a YouTube video page";
         }
       }
     });
   };
 
   onMount(async () => {
-    const videosQnty = await db.videos.count();
-
-    if (videosQnty > 0) {
-      chrome.action.setBadgeText({ text: videosQnty.toString() });
-    } else {
-      chrome.action.setBadgeText({ text: "" });
-    }
-
+    chrome.storage.local.get(["lang"], (data) => {
+      if (data.lang) {
+        locale.lang = data.lang;
+      } else {
+        chrome.storage.local.set({ lang: "en" });
+      }
+    });
     fetchTabData();
   });
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: Event) => {
     e.preventDefault();
     try {
       await db.videos.add({
         title: title,
-        folder_id: selectedFolder.id ?? null,
+        folder_id: selectedFolder ? selectedFolder.id : null,
         url: url,
         created_at: new Date(),
       });
@@ -68,14 +74,7 @@
       const lastElement = listVideoElements[listVideoElements.length - 1];
       lastElement.scrollIntoView({ behavior: "smooth" });
 
-      const videosQnty = await db.videos.count();
-
-      if (videosQnty > 0) {
-        chrome.action.setBadgeText({ text: videosQnty.toString() });
-        chrome.action.setBadgeBackgroundColor({ color: "#68f2b2" });
-      } else {
-        chrome.action.setBadgeText({ text: "" });
-      }
+      await updateNotificationBadge(db);
     } catch (error) {
       console.error("Error adding video", error);
     }
@@ -86,13 +85,17 @@
   class="p flex {openSettings ? 'justify-start' : 'justify-end'} px-2 pt-2"
 >
   {#if openSettings}
-    <button onclick={() => (openSettings = !openSettings)}
+    <button
+      title={t("button.back_home")}
+      onclick={() => (openSettings = !openSettings)}
       ><ChevronLeft
         class="text-accent-ditto saturate-25 hover:saturate-100"
         size={16}
       /></button
     >{:else}
-    <button onclick={() => (openSettings = !openSettings)}
+    <button
+      title={t("button.settings")}
+      onclick={() => (openSettings = !openSettings)}
       ><Settings
         class="text-accent-ditto saturate-25 hover:saturate-100"
         size={16}
@@ -101,9 +104,18 @@
   {/if}
 </header>
 <main class="p-3 pt-0">
-  <h1 class="font-main text-accent-ditto pb-4 text-2xl opacity-50 select-none">
-    guardaditto
-  </h1>
+  <div class="flex flex-col items-center justify-center text-center">
+    <img
+      src="/g-logo.svg"
+      alt=""
+      class="text-accent-ditto w-5 pb-4 opacity-50 select-none"
+    />
+    <!-- <h1
+      class="font-main text-accent-ditto pb-4 text-2xl opacity-50 select-none"
+    >
+      guardaditto
+    </h1> -->
+  </div>
   {#if !openSettings}
     <form
       class="flex items-center justify-between gap-2"
@@ -115,10 +127,12 @@
         disabled
         name="url"
         type="text"
+        placeholder={t("input.placeholder")}
         class="border-accent-ditto bg-primary-ditto ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring col-span-4 flex h-8 w-full rounded-full border px-2 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       />
       <div class="flex gap-2">
         <button
+          title={t("button.assign_folder")}
           disabled={!enableSubmit}
           type="button"
           onclick={() => {
@@ -128,13 +142,14 @@
             ? 'bg-primary-ditto'
             : ''} border-accent-ditto ring-offset-background focus-visible:ring-ring hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 cursor-pointer gap-2 rounded-full text-center text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
         >
-          {#if selectedFolder.id}
+          {#if selectedFolder && selectedFolder.id}
             {selectedFolder.name}
           {:else}
             <FolderInput class="text-xs" />
           {/if}
         </button>
         <button
+          title={t("button.add_video")}
           disabled={!enableSubmit}
           type="submit"
           class="border-accent-ditto ring-offset-background focus-visible:ring-ring not-first:hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 inline-flex h-8 w-8 cursor-pointer items-center justify-center gap-2 rounded-full border text-center text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
@@ -144,14 +159,9 @@
     </form>
     <div class="relative h-14">
       {#if showExistingFolders}
-        <FolderListAlt {selectedFolder} {showExistingFolders} bind:resize />
+        <FolderListAlt {selectedFolder} bind:showExistingFolders bind:resize />
       {:else}
-        <FolderList
-          {selectedFolder}
-          {showExistingFolders}
-          bind:showEmojiOptions
-          bind:resize
-        />
+        <FolderList {selectedFolder} bind:showEmojiOptions bind:resize />
       {/if}
     </div>
     <div class="relative h-50">

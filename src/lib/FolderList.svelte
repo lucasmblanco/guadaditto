@@ -10,16 +10,20 @@
   import { db } from "../background/background";
   import { onMount } from "svelte";
   import { slide } from "svelte/transition";
-  import { selectFolder } from "../utils/utils";
+  import type { SelectedFolder } from "../types";
+  import { t } from "../i8n/i8n.svelte";
 
   let scrollContainer = $state<HTMLElement | null>(null);
   let showLeftGradient = $state(false);
   let showRightGradient = $state(false);
   let {
     selectedFolder,
-    showExistingFolders,
     showEmojiOptions = $bindable(),
     resize = $bindable(),
+  }: {
+    selectedFolder: SelectedFolder;
+    showEmojiOptions?: boolean;
+    resize?: boolean;
   } = $props();
 
   let folders = liveQuery(() => db.folders.toArray());
@@ -70,12 +74,14 @@
 >
   <div class=" grid min-w-0 grid-flow-col items-center gap-2">
     <label
-      class="border-accent-ditto ring-offset-background focus-visible:ring-ring // hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-accent-ditto inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full border text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:pointer-events-none disabled:opacity-50 has-[:checked]:border-1 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+      title={t("button.no_folder")}
+      class="border-accent-ditto ring-offset-background focus-visible:ring-ring hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-accent-ditto inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full border text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:pointer-events-none disabled:opacity-50 has-[:checked]:border-1 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
       for="no_folder"
       ><input
         checked={selectedFolder.id === null}
         onclick={() => {
-          selectFolder(null, selectedFolder, showExistingFolders);
+          selectedFolder.id = null;
+          selectedFolder.name = "";
           showEmojiOptions = false;
         }}
         defaultChecked={true}
@@ -103,12 +109,16 @@
       {#if $folders && $folders.length > 0}
         {#each $folders as folder (folder.id)}
           <label
+            title={t("button.with_folder", { folder: folder.name })}
             class="border-accent-ditto font-emoji ring-offset-background focus-visible:ring-ring // hover:bg-primary-ditto active:bg-primary-ditto/150 has-[:checked]:bg-primary-ditto has-[:checked]:border-accent-ditto inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full border text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 has-[:checked]:border-1 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
             for={folder.id + folder.name}
             ><input
               checked={folder.id === selectedFolder.id}
               onclick={() => {
-                selectFolder(folder, selectedFolder, showExistingFolders);
+                // selectFolder(folder, selectedFolder, showExistingFolders);
+                selectedFolder.id = folder.id;
+                selectedFolder.name = folder.name;
+                showExistingFolders = false;
                 showEmojiOptions = false;
               }}
               hidden
@@ -123,6 +133,9 @@
         <CircleDashed
           class="text-primary-ditto h-10 w-10 text-2xl opacity-40"
         />
+        <CircleDashed
+          class="text-primary-ditto h-10 w-10 text-2xl opacity-20"
+        />
       {/if}
     </div>
     {#if showRightGradient}
@@ -136,6 +149,7 @@
     {/if}
   </div>
   <button
+    title={t("button.create_folder")}
     onclick={() => {
       showEmojiOptions = !showEmojiOptions;
     }}

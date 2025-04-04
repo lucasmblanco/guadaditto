@@ -1,11 +1,14 @@
-import { YOUTUBE_VIDEO_SELECTOR } from "../constants";
+import {
+  YOUTUBE_VIDEOS_CONTAINER,
+  YOUTUBE_VIDEO_INFO_CONTAINER,
+} from "../constants";
 
 function elementMatchesSelectors(element: HTMLElement) {
   const selectors = [
-    YOUTUBE_VIDEO_SELECTOR.homepage,
-    YOUTUBE_VIDEO_SELECTOR.subscription_page,
-    YOUTUBE_VIDEO_SELECTOR.channel_videos_page,
-    YOUTUBE_VIDEO_SELECTOR.related_videos,
+    YOUTUBE_VIDEOS_CONTAINER.homepage,
+    YOUTUBE_VIDEOS_CONTAINER.subscription_page,
+    YOUTUBE_VIDEOS_CONTAINER.channel_videos_page,
+    YOUTUBE_VIDEOS_CONTAINER.related_videos,
   ];
 
   return selectors.some((selector) => {
@@ -52,11 +55,12 @@ if (document.readyState === "loading") {
 
 function createButton(target: HTMLElement) {
   let containers;
+
   const gridContainers = target.querySelectorAll<HTMLElement>(
-    "ytd-rich-grid-media",
+    YOUTUBE_VIDEO_INFO_CONTAINER.main_video_container,
   );
   const relatedContainers = target.querySelectorAll<HTMLElement>(
-    "ytd-compact-video-renderer",
+    YOUTUBE_VIDEO_INFO_CONTAINER.related_video_container,
   );
 
   if (relatedContainers.length > 0) {
@@ -66,15 +70,7 @@ function createButton(target: HTMLElement) {
   }
 
   containers.forEach((container) => {
-    const dismissibleElement =
-      container.querySelector<HTMLElement>("#dismissible");
-
-    if (!dismissibleElement) {
-      return;
-    }
-
-    const buttonExists =
-      dismissibleElement.querySelector<HTMLElement>(".g-button");
+    const buttonExists = container.querySelector<HTMLElement>(".g-button");
 
     if (buttonExists) {
       return;
@@ -86,9 +82,9 @@ function createButton(target: HTMLElement) {
 
       img.src = chrome.runtime.getURL("icons/icon128.png");
       img.classList.add("g-icon");
-      dismissibleElement.style.position = "relative";
+      container.style.position = "relative";
       button.appendChild(img);
-      dismissibleElement.appendChild(button);
+      container.appendChild(button);
 
       button.addEventListener("click", (e) =>
         addOpenPopupFunctionality(e, container),

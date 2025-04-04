@@ -51,7 +51,6 @@ if (document.readyState === "loading") {
 }
 
 function createButton(target: HTMLElement) {
-  // const lists = target.querySelectorAll<HTMLElement>("#dismissible");
   let containers;
   const gridContainers = target.querySelectorAll<HTMLElement>(
     "ytd-rich-grid-media",
@@ -78,21 +77,6 @@ function createButton(target: HTMLElement) {
       dismissibleElement.querySelector<HTMLElement>(".g-button");
 
     if (buttonExists) {
-      // const linkElement = container?.querySelector("a#thumbnail");
-      // videoUrl = linkElement
-      //   ? `https://www.youtube.com${linkElement.getAttribute("href")}`
-      //   : null;
-
-      // const titleElement = container?.querySelector("#video-title");
-      // videoTitle =
-      //   titleElement && titleElement.textContent
-      //     ? titleElement.textContent.trim()
-      //     : "Unknown Title";
-
-      // buttonExists.addEventListener("click", (e) =>
-      //   addOpenPopupFunctionality(e, videoUrl, videoTitle),
-      // );
-
       return;
     } else {
       const button = document.createElement("button");
@@ -106,18 +90,6 @@ function createButton(target: HTMLElement) {
       button.appendChild(img);
       dismissibleElement.appendChild(button);
 
-      // let videoContainer = list.closest(
-      //   "ytd-rich-grid-media, ytd-video-renderer",
-      // );
-
-      // const videoRelatedContainer = list.closest(
-      //   "ytd-compact-video-renderer, ytd-video-renderer",
-      // );
-
-      // if (videoRelatedContainer) {
-      //   videoContainer = videoRelatedContainer;
-      // }
-
       button.addEventListener("click", (e) =>
         addOpenPopupFunctionality(e, container),
       );
@@ -125,24 +97,7 @@ function createButton(target: HTMLElement) {
   });
 }
 
-// function addOpenPopupFunctionality(e, videoUrl, videoTitle) {
-//   e.stopPropagation();
-//   if (videoUrl) {
-//     chrome.storage.local.get("popupIsOpen", (result) => {
-//       if (!result.popupIsOpen) {
-//         chrome.runtime.sendMessage({
-//           action: "openPopup",
-//           url: videoUrl,
-//           title: videoTitle,
-//         });
-//       } else {
-//         chrome.runtime.sendMessage({ action: "closePopup" });
-//       }
-//     });
-//   }
-// }
-
-function addOpenPopupFunctionality(e, container) {
+function addOpenPopupFunctionality(e: MouseEvent, container: HTMLElement) {
   e.stopPropagation();
   const linkElement = container.querySelector("a#thumbnail");
   const videoUrl = linkElement

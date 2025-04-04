@@ -1,6 +1,6 @@
 import { YOUTUBE_VIDEO_SELECTOR } from "../constants";
 
-function elementMatchesSelectors(element) {
+function elementMatchesSelectors(element: HTMLElement) {
   const selectors = [
     YOUTUBE_VIDEO_SELECTOR.homepage,
     YOUTUBE_VIDEO_SELECTOR.subscription_page,
@@ -17,12 +17,12 @@ function elementMatchesSelectors(element) {
   });
 }
 
-function checkAddedNodes(addedNodes) {
+function checkAddedNodes(addedNodes: NodeList) {
   for (const node of addedNodes) {
     if (node.nodeType === Node.ELEMENT_NODE) {
-      if (elementMatchesSelectors(node)) {
+      if (elementMatchesSelectors(node as HTMLElement)) {
         const observer = new MutationObserver(() => {
-          createButton(node);
+          createButton(node as HTMLElement);
         });
         observer.observe(node, { childList: true, subtree: true });
       }
@@ -50,14 +50,51 @@ if (document.readyState === "loading") {
   startObserving();
 }
 
-function createButton(target: Element) {
-  const lists = target.querySelectorAll("#dismissible");
+function createButton(target: HTMLElement) {
+  // const lists = target.querySelectorAll<HTMLElement>("#dismissible");
+  let containers;
+  const gridContainers = target.querySelectorAll<HTMLElement>(
+    "ytd-rich-grid-media",
+  );
+  const relatedContainers = target.querySelectorAll<HTMLElement>(
+    "ytd-compact-video-renderer",
+  );
 
-  lists.forEach((list) => {
-    const buttonExists = list.querySelector(".g-button");
+  if (relatedContainers.length > 0) {
+    containers = relatedContainers;
+  } else {
+    containers = gridContainers;
+  }
+
+  containers.forEach((container) => {
+    let videoUrl;
+    let videoTitle;
+    const dismissibleElement =
+      container.querySelector<HTMLElement>("#dismissible");
+
+    if (!dismissibleElement) {
+      return;
+    }
+
+    const buttonExists =
+      dismissibleElement.querySelector<HTMLElement>(".g-button");
 
     if (buttonExists) {
-      console.log("Button already exists, skipping creation.");
+      const linkElement = container?.querySelector("a#thumbnail");
+      videoUrl = linkElement
+        ? `https://www.youtube.com${linkElement.getAttribute("href")}`
+        : null;
+
+      const titleElement = container?.querySelector("#video-title");
+      videoTitle =
+        titleElement && titleElement.textContent
+          ? titleElement.textContent.trim()
+          : "Unknown Title";
+
+      buttonExists.addEventListener("click", (e) =>
+        addOpenPopupFunctionality(e, videoUrl, videoTitle),
+      );
+
       return;
     } else {
       const button = document.createElement("button");
@@ -67,51 +104,53 @@ function createButton(target: Element) {
 
       img.src = chrome.runtime.getURL("icons/icon128.png");
       img.classList.add("g-icon");
-      list.style.position = "relative";
+      dismissibleElement.style.position = "relative";
       button.appendChild(img);
-      list.appendChild(button);
+      dismissibleElement.appendChild(button);
 
-      let videoContainer = list.closest(
-        "ytd-rich-grid-media, ytd-video-renderer",
-      );
+      // let videoContainer = list.closest(
+      //   "ytd-rich-grid-media, ytd-video-renderer",
+      // );
 
-      const videoRelatedContainer = list.closest(
-        "ytd-compact-video-renderer, ytd-video-renderer",
-      );
+      // const videoRelatedContainer = list.closest(
+      //   "ytd-compact-video-renderer, ytd-video-renderer",
+      // );
 
-      if (videoRelatedContainer) {
-        videoContainer = videoRelatedContainer;
-      }
+      // if (videoRelatedContainer) {
+      //   videoContainer = videoRelatedContainer;
+      // }
 
-      const linkElement = videoContainer?.querySelector("a#thumbnail");
-      const videoUrl = linkElement
+      const linkElement = container?.querySelector("a#thumbnail");
+      videoUrl = linkElement
         ? `https://www.youtube.com${linkElement.getAttribute("href")}`
         : null;
 
-      const titleElement = videoContainer?.querySelector("#video-title");
-      const videoTitle =
+      const titleElement = container?.querySelector("#video-title");
+      videoTitle =
         titleElement && titleElement.textContent
           ? titleElement.textContent.trim()
           : "Unknown Title";
 
-      button.addEventListener("click", (e) => {
-        e.stopPropagation();
-        if (videoUrl) {
-          chrome.storage.local.get("popupIsOpen", (result) => {
-            if (!result.popupIsOpen) {
-              chrome.runtime.sendMessage({
-                action: "openPopup",
-                url: videoUrl,
-                title: videoTitle,
-              });
-            } else {
-              chrome.runtime.sendMessage({ action: "closePopup" });
-            }
-          });
-        } else {
-          console.log("Video URL not found.");
-        }
-      });
+      button.addEventListener("click", (e) =>
+        addOpenPopupFunctionality(e, videoUrl, videoTitle),
+      );
     }
   });
+}
+
+function addOpenPopupFunctionality(e, videoUrl, videoTitle) {
+  e.stopPropagation();
+  if (videoUrl) {
+    chrome.storage.local.get("popupIsOpen", (result) => {
+      if (!result.popupIsOpen) {
+        chrome.runtime.sendMessage({
+          action: "openPopup",
+          url: videoUrl,
+          title: videoTitle,
+        });
+      } else {
+        chrome.runtime.sendMessage({ action: "closePopup" });
+      }
+    });
+  }
 }

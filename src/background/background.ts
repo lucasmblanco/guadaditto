@@ -12,6 +12,21 @@ db.version(1).stores({
   folders: "++id, name, created_at",
 });
 
+db.version(2)
+  .stores({
+    videos:
+      "++id, title, url, created_at, folder_id, playlist_url, has_been_viewed",
+  })
+  .upgrade((tx) => {
+    return tx
+      .table("videos")
+      .toCollection()
+      .modify((video) => {
+        video.playlist_url = null;
+        video.has_been_viewed = false;
+      });
+  });
+
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "openPopup") {
     chrome.storage.local.set(

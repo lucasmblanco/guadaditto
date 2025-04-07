@@ -1,6 +1,9 @@
 import type { db } from "../background/background";
 import type { Folder } from "../models";
 
+/**
+ * @deprecated This function is deprecated and will be removed in future versions.
+ */
 export function urlChecker(url: string): boolean {
   const youtubeRegex = /^https:\/\/www\.youtube\.com\/watch\?v=[a-zA-Z0-9_-]+$/;
   return youtubeRegex.test(url);
@@ -54,7 +57,6 @@ function getYoutubeVideoId(url: string): string | null {
   const matchWatch = url.match(regexWatch);
   if (matchWatch) return matchWatch[1];
 
-  // Verificamos enlaces acortados de youtu.be
   const regexShort =
     /^(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})(?:\?.*)?$/;
   const matchShort = url.match(regexShort);
@@ -68,12 +70,10 @@ export function cleanYoutubeUrl(url: string): string {
   return `https://www.youtube.com/watch?v=${videoId}`;
 }
 
-// Función para verificar si URL está en una playlist
 export function isInPlaylist(url: string): boolean {
   return url.includes("&list=") || url.includes("?list=");
 }
 
-// Función para extraer el ID de la playlist
 export function getPlaylistId(url: string): string | null {
   if (!isYoutubeVideoUrl(url)) return null;
 
@@ -83,10 +83,8 @@ export function getPlaylistId(url: string): string | null {
 }
 
 export function getYoutubePlaylistLink(url: string): string | null {
-  // Primero verificamos si la URL contiene un parámetro de playlist
   const playlistId = getPlaylistId(url);
   if (!playlistId) return null;
 
-  // Creamos un enlace directo a la playlist
   return `https://www.youtube.com/playlist?list=${playlistId}`;
 }

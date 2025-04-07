@@ -51,7 +51,6 @@ export function isYoutubeVideoUrl(url: string): boolean {
 function getYoutubeVideoId(url: string): string | null {
   if (!isYoutubeVideoUrl(url)) return null;
 
-  // Primero verificamos los formatos estándar
   const regexWatch =
     /^(?:https?:\/\/)?(?:www\.|m\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})(?:&.*)?$/;
   const matchWatch = url.match(regexWatch);

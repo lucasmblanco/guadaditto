@@ -38,3 +38,55 @@ export async function updateNotificationBadge(database: typeof db) {
     chrome.action.setBadgeText({ text: "" });
   }
 }
+
+export function isYoutubeVideoUrl(url: string): boolean {
+  const youtubeVideoRegex =
+    /^(https?:\/\/)?(www\.|m\.)?youtube\.com\/watch\?v=[a-zA-Z0-9_-]+(.*)?$/;
+  return youtubeVideoRegex.test(url);
+}
+
+function getYoutubeVideoId(url: string): string | null {
+  if (!isYoutubeVideoUrl(url)) return null;
+
+  // Primero verificamos los formatos estándar
+  const regexWatch =
+    /^(?:https?:\/\/)?(?:www\.|m\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})(?:&.*)?$/;
+  const matchWatch = url.match(regexWatch);
+  if (matchWatch) return matchWatch[1];
+
+  // Verificamos enlaces acortados de youtu.be
+  const regexShort =
+    /^(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})(?:\?.*)?$/;
+  const matchShort = url.match(regexShort);
+  if (matchShort) return matchShort[1];
+
+  return null;
+}
+
+export function cleanYoutubeUrl(url: string): string {
+  const videoId = getYoutubeVideoId(url);
+  return `https://www.youtube.com/watch?v=${videoId}`;
+}
+
+// Función para verificar si URL está en una playlist
+export function isInPlaylist(url: string): boolean {
+  return url.includes("&list=") || url.includes("?list=");
+}
+
+// Función para extraer el ID de la playlist
+export function getPlaylistId(url: string): string | null {
+  if (!isYoutubeVideoUrl(url)) return null;
+
+  const regex = /[?&]list=([a-zA-Z0-9_-]+)/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+export function getYoutubePlaylistLink(url: string): string | null {
+  // Primero verificamos si la URL contiene un parámetro de playlist
+  const playlistId = getPlaylistId(url);
+  if (!playlistId) return null;
+
+  // Creamos un enlace directo a la playlist
+  return `https://www.youtube.com/playlist?list=${playlistId}`;
+}

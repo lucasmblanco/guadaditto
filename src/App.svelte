@@ -7,9 +7,10 @@
   import EmojiList from "./lib/EmojiList.svelte";
   import { onMount } from "svelte";
   import {
-    urlChecker,
+    isYoutubeVideoUrl,
     extractVideoTitle,
     updateNotificationBadge,
+    cleanYoutubeUrl,
   } from "./utils/utils";
   import SettingsPage from "./lib/SettingsPage.svelte";
   import type { SelectedFolder } from "./types";
@@ -40,9 +41,9 @@
           active: true,
           currentWindow: true,
         });
-        if (tab?.url && urlChecker(tab?.url)) {
+        if (tab?.url && isYoutubeVideoUrl(tab?.url)) {
           enableSubmit = true;
-          url = tab.url;
+          url = cleanYoutubeUrl(tab.url);
           title = extractVideoTitle(tab.title as string) || "";
         }
       }

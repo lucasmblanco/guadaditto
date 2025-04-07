@@ -33,13 +33,16 @@ export function selectFolder(
 }
 
 export async function updateNotificationBadge(database: typeof db) {
-  const videosQnty = await database.videos.count();
+  const videosQnty = await database.videos
+    .filter((video) => video.has_been_viewed === false)
+    .count();
 
   if (videosQnty > 0) {
     chrome.action.setBadgeText({ text: videosQnty.toString() });
   } else {
     chrome.action.setBadgeText({ text: "" });
   }
+  chrome.action.setBadgeBackgroundColor({ color: "#68f2b2" });
 }
 
 export function isYoutubeVideoUrl(url: string): boolean {

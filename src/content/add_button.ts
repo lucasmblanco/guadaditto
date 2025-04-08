@@ -9,6 +9,7 @@ function elementMatchesSelectors(element: HTMLElement) {
     YOUTUBE_VIDEOS_CONTAINER.subscription_page,
     YOUTUBE_VIDEOS_CONTAINER.channel_videos_page,
     YOUTUBE_VIDEOS_CONTAINER.related_videos,
+    YOUTUBE_VIDEOS_CONTAINER.search_videos,
   ];
 
   return selectors.some((selector) => {
@@ -54,20 +55,20 @@ if (document.readyState === "loading") {
 }
 
 function createButton(target: HTMLElement) {
-  let containers;
+  const containersList = [
+    target.querySelectorAll<HTMLElement>(
+      YOUTUBE_VIDEO_INFO_CONTAINER.related_video_container,
+    ),
+    target.querySelectorAll<HTMLElement>(
+      YOUTUBE_VIDEO_INFO_CONTAINER.main_video_container,
+    ),
+    target.querySelectorAll<HTMLElement>(
+      YOUTUBE_VIDEO_INFO_CONTAINER.search_videos_container,
+    ),
+  ];
 
-  const gridContainers = target.querySelectorAll<HTMLElement>(
-    YOUTUBE_VIDEO_INFO_CONTAINER.main_video_container,
-  );
-  const relatedContainers = target.querySelectorAll<HTMLElement>(
-    YOUTUBE_VIDEO_INFO_CONTAINER.related_video_container,
-  );
-
-  if (relatedContainers.length > 0) {
-    containers = relatedContainers;
-  } else {
-    containers = gridContainers;
-  }
+  const containers =
+    containersList.find((nodeList) => nodeList.length > 0) ?? [];
 
   containers.forEach((container) => {
     const buttonExists = container.querySelector<HTMLElement>(".g-button");
@@ -106,16 +107,30 @@ function addOpenPopupFunctionality(e: MouseEvent, container: HTMLElement) {
       ? titleElement.textContent.trim()
       : "Unknown Title";
   if (videoUrl) {
-    chrome.storage.local.get("popupIsOpen", (result) => {
-      if (!result.popupIsOpen) {
-        chrome.runtime.sendMessage({
-          action: "openPopup",
-          url: videoUrl,
-          title: videoTitle,
-        });
-      } else {
-        chrome.runtime.sendMessage({ action: "closePopup" });
-      }
+    /* 
+
+    Previous implementation, creates an error when the user try to open the popup again after closing it by clicking anywhere in the page.
+    The error: the user needs to click the button two times because "popupIsOpen" is never set to false.
+    I try using onDestroy (on App.svelte) and onSuspend (on background.ts) but it doesn't work.
+
+
+     chrome.storage.local.get("popupIsOpen", (result) => {
+       if (!result.popupIsOpen) {
+         chrome.runtime.sendMessage({
+           action: "openPopup",
+           url: videoUrl,
+           title: videoTitle,
+         });
+       } else {
+         chrome.runtime.sendMessage({ action: "closePopup" });
+       }
+     });
+    */
+
+    chrome.runtime.sendMessage({
+      action: "openPopup",
+      url: videoUrl,
+      title: videoTitle,
     });
   }
 }

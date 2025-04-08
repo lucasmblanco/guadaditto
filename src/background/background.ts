@@ -31,14 +31,29 @@ chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "openPopup") {
     chrome.storage.local.set(
       { videoUrl: message.url, videoTitle: message.title },
-      () => {
-        chrome.storage.local.set({ popupIsOpen: true });
+      /* 
+
+      Previous implementation, creates an error when the user try to open the popup again after closing it by clicking anywhere in the page.
+      The error: the user needs to click the button two times because "popupIsOpen" is never set to false.
+      I try using onDestroy (on App.svelte) and onSuspend (on background.ts) but it doesn't work.
+      
+       () => {
+         chrome.storage.local.set({ popupIsOpen: true });
         chrome.action.openPopup();
-      },
+       },
+      */
     );
-  } else if (message.action === "closePopup") {
-    chrome.storage.local.set({ popupIsOpen: false });
+    chrome.action.openPopup().catch(() => {});
   }
+
+  /* 
+
+  Part of previous implementation.
+
+   else if (message.action === "closePopup") {
+     chrome.storage.local.set({ popupIsOpen: false });
+   }
+  */
 });
 
 chrome.runtime.onStartup.addListener(async function () {

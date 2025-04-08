@@ -2,11 +2,16 @@
   import { db } from "../background/background";
   import { Trash2, Youtube, Copy, Check, ListEnd } from "lucide-svelte";
   import { updateNotificationBadge } from "../utils/utils";
+  import type { Video } from "../models";
 
   let isCopied = $state(false);
-  let { video } = $props();
+  let {
+    video,
+  }: {
+    video: Video;
+  } = $props();
 
-  async function markHasView(id) {
+  async function markHasView(id: number) {
     const videoData = await db.videos.get(id);
     if (videoData) {
       await db.videos.update(id, {
@@ -16,14 +21,12 @@
   }
 
   async function handleClick() {
-    await markHasView(video.id);
-
+    await markHasView(video.id as number);
     await updateNotificationBadge(db);
-
     window.open(video.url, "_blank");
   }
 
-  async function copyToClipboard(url) {
+  async function copyToClipboard(url: string) {
     await navigator.clipboard.writeText(url);
     isCopied = true;
     setTimeout(() => {
@@ -31,21 +34,13 @@
     }, 2000);
   }
 
-  async function deleteVideo(id) {
+  async function deleteVideo(id: number) {
     await db.videos.delete(id);
 
     await updateNotificationBadge(db);
   }
 </script>
 
-<!-- <a
-  href={video.url}
-  target="_blank"
-  class="flex basis-full items-center gap-2 truncate text-xs"
->
-  <Youtube class="basis-auto" size={"20"} />
-  <span class="basis-full truncate text-left">{video.title}</span>
-</a> -->
 <button
   onclick={handleClick}
   class="flex basis-full cursor-pointer items-center gap-2 truncate text-xs"
@@ -78,6 +73,6 @@
 {/if}
 <button
   class="flex items-center rounded p-1"
-  onclick={() => deleteVideo(video.id)}
+  onclick={() => deleteVideo(video.id as number)}
   ><Trash2 class="basis-auto hover:text-red-500" size={15} /></button
 >

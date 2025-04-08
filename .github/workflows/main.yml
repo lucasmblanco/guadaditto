@@ -94,9 +94,9 @@ jobs:
 
       - name: Compress dist folder
         run: |
-          RELEASE_NAME="guardadito-${{ steps.semantic_version.outputs.version }}.zip"
+          RELEASE_NAME="guardaditto-${{ steps.semantic_version.outputs.version }}.zip"
           cd dist
-          zip "../$RELEASE_NAME" *
+          zip -r "../$RELEASE_NAME" *
           cd ..
           echo "RELEASE_NAME=$RELEASE_NAME" >> $GITHUB_ENV
 

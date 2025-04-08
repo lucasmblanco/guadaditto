@@ -1,9 +1,11 @@
 interface Video {
-  id: number;
+  id?: number;
   title: string;
   url: string;
   created_at: Date;
   folder_id: number | null;
+  playlist_url: string | null;
+  has_been_viewed: boolean;
 }
 
 interface Folder {

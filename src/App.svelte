@@ -7,9 +7,12 @@
   import EmojiList from "./lib/EmojiList.svelte";
   import { onMount } from "svelte";
   import {
-    urlChecker,
+    isYoutubeVideoUrl,
     extractVideoTitle,
     updateNotificationBadge,
+    cleanYoutubeUrl,
+    isInPlaylist,
+    getYoutubePlaylistLink,
   } from "./utils/utils";
   import SettingsPage from "./lib/SettingsPage.svelte";
   import type { SelectedFolder } from "./types";
@@ -19,6 +22,7 @@
   let showEmojiOptions = $state(false);
   let url = $state("");
   let title = $state("");
+  let playlist_url = $state<string | null>(null);
   let selectedFolder: SelectedFolder = $state({
     id: null,
     name: "",
@@ -40,10 +44,13 @@
           active: true,
           currentWindow: true,
         });
-        if (tab?.url && urlChecker(tab?.url)) {
+        if (tab?.url && isYoutubeVideoUrl(tab?.url)) {
           enableSubmit = true;
-          url = tab.url;
+          url = cleanYoutubeUrl(tab.url);
           title = extractVideoTitle(tab.title as string) || "";
+          playlist_url = isInPlaylist(tab.url)
+            ? getYoutubePlaylistLink(tab.url)
+            : null;
         }
       }
     });
@@ -64,10 +71,12 @@
     e.preventDefault();
     try {
       await db.videos.add({
-        title: title,
+        title,
         folder_id: selectedFolder ? selectedFolder.id : null,
-        url: url,
+        url,
         created_at: new Date(),
+        playlist_url,
+        has_been_viewed: false,
       });
 
       const listVideoElements = document.querySelectorAll("ul>li");

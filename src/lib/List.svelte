@@ -65,7 +65,6 @@
       onclick={() => {
         checkedDefault = true;
         db.folders.where("id").equals(selectedFolder.id!).delete();
-        // selectFolder(null, selectedFolder, true);
         selectedFolder.id = null;
         selectedFolder.name = "";
       }}

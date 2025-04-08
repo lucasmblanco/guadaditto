@@ -3,8 +3,7 @@
   import { exportDB, importInto } from "dexie-export-import";
   import { VERSION } from "../version";
   import { updateNotificationBadge } from "../utils/utils";
-  import { t, locales, locale } from "../i8n/i8n.svelte"; // Assuming locale is a writable store
-  import { onMount } from "svelte";
+  import { t, locales, locale } from "../i8n/i8n.svelte";
 
   const options = {
     acceptVersionDiff: true, // Ignore version differences between databases
@@ -38,19 +37,11 @@
   async function handleExport() {
     try {
       const blob = await exportDB(db, { prettyJson: true });
-      downloadData(blob, `guardaditto ${new Date().toLocaleString()}.json`); // change name
+      downloadData(blob, `guardaditto ${new Date().toLocaleString()}.json`);
     } catch (error) {
       console.error("" + error);
     }
   }
-
-  // onMount(() => {
-  //   chrome.storage.local.get(["lang"], (data) => {
-  //     if (data.lang) {
-  //       langSelected = data.lang;
-  //     }
-  //   });
-  // });
 </script>
 
 <main class="h-[270px] p-3 pt-0">
@@ -83,20 +74,6 @@
         >{t("settings.export")}</button
       >
     </li>
-    <!-- <li>
-      <select
-        onchange={(e) => {
-          const target = e.target as HTMLSelectElement | null;
-          if (target) {
-            locale.lang = target.value;
-          }
-        }}
-      >
-        {#each locales as l}
-          <option value={l}>{l}</option>
-        {/each}
-      </select>
-    </li> -->
   </ul>
 </main>
 <foooter class="flex justify-center opacity-20 select-none"

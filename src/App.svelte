@@ -119,11 +119,6 @@
       alt=""
       class="text-accent-ditto w-5 pb-4 opacity-50 select-none"
     />
-    <!-- <h1
-      class="font-main text-accent-ditto pb-4 text-2xl opacity-50 select-none"
-    >
-      guardaditto
-    </h1> -->
   </div>
   {#if !openSettings}
     <form
@@ -170,7 +165,12 @@
       {#if showExistingFolders}
         <FolderListAlt {selectedFolder} bind:showExistingFolders bind:resize />
       {:else}
-        <FolderList {selectedFolder} bind:showEmojiOptions bind:resize />
+        <FolderList
+          {selectedFolder}
+          bind:showEmojiOptions
+          bind:resize
+          bind:showExistingFolders
+        />
       {/if}
     </div>
     <div class="relative h-50">

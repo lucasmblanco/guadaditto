@@ -20,10 +20,12 @@
     selectedFolder,
     showEmojiOptions = $bindable(),
     resize = $bindable(),
+    showExistingFolders = $bindable(),
   }: {
     selectedFolder: SelectedFolder;
     showEmojiOptions?: boolean;
     resize?: boolean;
+    showExistingFolders?: boolean;
   } = $props();
 
   let folders = liveQuery(() => db.folders.toArray());
@@ -115,7 +117,6 @@
             ><input
               checked={folder.id === selectedFolder.id}
               onclick={() => {
-                // selectFolder(folder, selectedFolder, showExistingFolders);
                 selectedFolder.id = folder.id;
                 selectedFolder.name = folder.name;
                 showExistingFolders = false;

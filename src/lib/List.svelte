@@ -6,7 +6,6 @@
   import { flip } from "svelte/animate";
   import { slide } from "svelte/transition";
   import type { SelectedFolder } from "../types";
-  import { t } from "../i8n/i8n.svelte";
 
   let {
     selectedFolder = $bindable(),
@@ -52,7 +51,8 @@
           absoluteStrokeWidth={true}
         />
         <p class="text-accent-ditto font-main text-base italic">
-          {t("homepage.empty")}
+          <!-- {t("homepage.empty")} -->
+          {chrome.i18n.getMessage("homepage_empty")}
         </p>
       </div>
     </div>
@@ -60,7 +60,7 @@
   {#if selectedFolder.id}
     <div class="mt-auto"></div>
     <button
-      title={t("button.delete_folder")}
+      title={chrome.i18n.getMessage("button_delete_folder")}
       class="sticky -bottom-1 left-1/2 mt-1 w-fit -translate-x-1/2 transform rounded-t-full bg-red-400 p-2 text-black saturate-50 hover:saturate-100"
       onclick={() => {
         checkedDefault = true;

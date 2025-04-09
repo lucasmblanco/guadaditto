@@ -3,7 +3,6 @@
   import { exportDB, importInto } from "dexie-export-import";
   import { VERSION } from "../version";
   import { updateNotificationBadge } from "../utils/utils";
-  import { t, locales, locale } from "../i8n/i8n.svelte";
 
   const options = {
     acceptVersionDiff: true, // Ignore version differences between databases
@@ -46,7 +45,7 @@
 
 <main class="h-[270px] p-3 pt-0">
   <ul class="flex flex-col items-start gap-2">
-    <li class="flex w-full justify-center gap-2">
+    <!-- <li class="flex w-full justify-center gap-2">
       {#each locales as l}
         <button
           class="{l === locale.lang
@@ -62,17 +61,19 @@
           value={l}>{l}</button
         >
       {/each}
-    </li>
+    </li> -->
     <li>
       <label class="hover:text-accent-ditto">
-        {t("settings.import")}
+        <!-- {t("settings.import")} -->
+        {chrome.i18n.getMessage("settings_import")}
         <input type="file" class="hidden" onchange={handleImport} />
       </label>
     </li>
     <li>
-      <button onclick={handleExport} class="hover:text-accent-ditto"
-        >{t("settings.export")}</button
-      >
+      <button onclick={handleExport} class="hover:text-accent-ditto">
+        <!-- {t("settings.export")} -->
+        {chrome.i18n.getMessage("settings_export")}
+      </button>
     </li>
   </ul>
 </main>

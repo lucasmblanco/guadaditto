@@ -1,0 +1,46 @@
+{
+  "extensionDescription": {
+    "message": "Save Youtube links to watch later without having to open many tabs at once."
+  },
+  "input_placeholder": {
+    "message": "Not on a YouTube video page"
+  },
+  "homepage_empty": {
+    "message": "So empty..."
+  },
+  "settings_import": {
+    "message": "Import database"
+  },
+  "settings_export": {
+    "message": "Export database"
+  },
+  "button_create_folder": {
+    "message": "Create folder"
+  },
+  "button_no_folder": {
+    "message": "Filtered by: unassigned"
+  },
+  "button_with_folder": {
+    "message": "Filtered by: $1",
+    "placeholders": {
+      "1": {
+        "content": "$1"
+      }
+    }
+  },
+  "button_delete_folder": {
+    "message": "Delete folder"
+  },
+  "button_settings": {
+    "message": "Go to settings"
+  },
+  "button_assign_folder": {
+    "message": "Select folder"
+  },
+  "button_add_video": {
+    "message": "Add video"
+  },
+  "button_back": {
+    "message": "Back to homepage"
+  }
+}

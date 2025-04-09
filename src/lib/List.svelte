@@ -31,7 +31,7 @@
 </script>
 
 <ul
-  class="bg-primary-ditto border-accent-ditto relative flex h-full flex-col overflow-y-auto rounded-xl border-1 pt-2"
+  class="bg-primary-ditto border-accent-ditto relative z-1000 flex h-full flex-col overflow-y-auto rounded-xl border-1 pt-2"
   transition:slide
 >
   {#if $videos && $videos.length > 0}
@@ -51,8 +51,7 @@
           strokeWidth={2}
           absoluteStrokeWidth={true}
         />
-        <p class="text-accent-ditto font-main text-base italic">
-          <!-- {t("homepage.empty")} -->
+        <p class="text-accent-ditto font-main text-base italic select-none">
           {chrome.i18n.getMessage("homepage_empty")}
         </p>
       </div>
@@ -62,7 +61,7 @@
     <div class="mt-auto"></div>
     <button
       title={chrome.i18n.getMessage("button_delete_folder")}
-      class="sticky -bottom-1 left-1/2 mt-1 w-fit -translate-x-1/2 transform rounded-t-full bg-red-400 p-2 text-black saturate-50 hover:saturate-100"
+      class="sticky bottom-1 left-1/2 mb-2 w-fit -translate-x-1/2 transform rounded-full bg-red-400 p-2 text-black saturate-50 hover:saturate-100"
       onclick={async () => {
         try {
           await db.transaction("rw", db.folders, db.videos, async () => {

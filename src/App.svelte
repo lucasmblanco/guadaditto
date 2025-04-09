@@ -94,24 +94,20 @@
 >
   {#if openSettings}
     <button
+      class="hover:bg-accent-ditto rounded-full p-2 opacity-50 transition-all hover:opacity-100"
       title={chrome.i18n.getMessage("button_back")}
       onclick={() => (openSettings = !openSettings)}
-      ><ChevronLeft
-        class="text-accent-ditto saturate-25 hover:saturate-100"
-        size={16}
-      /></button
+      ><ChevronLeft class="saturate-25 hover:saturate-100" size={16} /></button
     >{:else}
     <button
+      class="hover:bg-accent-ditto rounded-full p-2 opacity-50 transition-all hover:opacity-100"
       title={chrome.i18n.getMessage("button_settings")}
       onclick={() => (openSettings = !openSettings)}
-      ><Settings
-        class="text-accent-ditto saturate-25 hover:saturate-100"
-        size={16}
-      /></button
+      ><Settings class="saturate-25 hover:saturate-100 " size={16} /></button
     >
   {/if}
 </header>
-<main class="p-3 pt-0">
+<main class="p-3 pt-0 transition-all">
   <div class="flex flex-col items-center justify-center text-center">
     <img
       src="/g-logo.svg"

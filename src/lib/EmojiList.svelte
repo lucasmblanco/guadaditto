@@ -31,7 +31,7 @@
   }
 </script>
 
-<div class="relative h-full" transition:slide>
+<div class="absolute top-0 left-0 h-full" transition:slide>
   <div class="grid h-12 w-full grid-cols-11 items-center gap-2 overflow-y-auto">
     {#each Object.keys(emojisCat) as category}
       <button
@@ -45,7 +45,7 @@
     {/each}
   </div>
   <div
-    class="border-accent-ditto relative h-[calc(100%-3rem)] overflow-y-auto rounded-xl border-1"
+    class="border-accent-ditto bg-primary-ditto relative h-[calc(100%-3rem)] overflow-y-auto rounded-xl border-1"
   >
     <div class=" relative grid grid-cols-10 gap-[.1rem]">
       {#if activeCategory}
@@ -53,7 +53,7 @@
           <button
             onclick={createFolder}
             value={emoji.emoji}
-            class=" font-emoji hover:bg-primary-ditto/50 active:bg-primary-ditto/150 h-8 w-full self-center rounded-full text-center"
+            class=" font-emoji hover: h-8 w-full self-center rounded-full text-center hover:backdrop-saturate-200"
             >{emoji.emoji}</button
           >
         {/each}

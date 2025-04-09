@@ -16,7 +16,6 @@
   } from "./utils/utils";
   import SettingsPage from "./lib/SettingsPage.svelte";
   import type { SelectedFolder } from "./types";
-  import { t, locale } from "./i8n/i8n.svelte";
 
   let showExistingFolders = $state(false);
   let showEmojiOptions = $state(false);
@@ -57,13 +56,6 @@
   };
 
   onMount(async () => {
-    chrome.storage.local.get(["lang"], (data) => {
-      if (data.lang) {
-        locale.lang = data.lang;
-      } else {
-        chrome.storage.local.set({ lang: "en" });
-      }
-    });
     fetchTabData();
   });
 
@@ -84,10 +76,17 @@
       lastElement.scrollIntoView({ behavior: "smooth" });
 
       await updateNotificationBadge(db);
+      enableSubmit = false;
+      title = getAddedMessage();
     } catch (error) {
       console.error("Error adding video", error);
     }
   };
+
+  function getAddedMessage() {
+    const message = chrome.i18n.getMessage("input_added");
+    return message;
+  }
 </script>
 
 <header
@@ -95,35 +94,26 @@
 >
   {#if openSettings}
     <button
-      title={t("button.back_home")}
+      class="hover:bg-accent-ditto rounded-full p-2 opacity-50 transition-all hover:opacity-100"
+      title={chrome.i18n.getMessage("button_back")}
       onclick={() => (openSettings = !openSettings)}
-      ><ChevronLeft
-        class="text-accent-ditto saturate-25 hover:saturate-100"
-        size={16}
-      /></button
+      ><ChevronLeft class="saturate-25 hover:saturate-100" size={16} /></button
     >{:else}
     <button
-      title={t("button.settings")}
+      class="hover:bg-accent-ditto rounded-full p-2 opacity-50 transition-all hover:opacity-100"
+      title={chrome.i18n.getMessage("button_settings")}
       onclick={() => (openSettings = !openSettings)}
-      ><Settings
-        class="text-accent-ditto saturate-25 hover:saturate-100"
-        size={16}
-      /></button
+      ><Settings class="saturate-25 hover:saturate-100 " size={16} /></button
     >
   {/if}
 </header>
-<main class="p-3 pt-0">
+<main class="p-3 pt-0 transition-all">
   <div class="flex flex-col items-center justify-center text-center">
     <img
       src="/g-logo.svg"
       alt=""
       class="text-accent-ditto w-5 pb-4 opacity-50 select-none"
     />
-    <!-- <h1
-      class="font-main text-accent-ditto pb-4 text-2xl opacity-50 select-none"
-    >
-      guardaditto
-    </h1> -->
   </div>
   {#if !openSettings}
     <form
@@ -136,12 +126,12 @@
         disabled
         name="url"
         type="text"
-        placeholder={t("input.placeholder")}
-        class="border-accent-ditto bg-primary-ditto ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring col-span-4 flex h-8 w-full rounded-full border px-2 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        placeholder={chrome.i18n.getMessage("input_placeholder")}
+        class="border-accent-ditto bg-primary-ditto ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring text-xxs col-span-4 flex h-8 w-full rounded-full border px-2 py-2 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       />
       <div class="flex gap-2">
         <button
-          title={t("button.assign_folder")}
+          title={chrome.i18n.getMessage("button_assign_folder")}
           disabled={!enableSubmit}
           type="button"
           onclick={() => {
@@ -158,7 +148,7 @@
           {/if}
         </button>
         <button
-          title={t("button.add_video")}
+          title={chrome.i18n.getMessage("button_add_video")}
           disabled={!enableSubmit}
           type="submit"
           class="border-accent-ditto ring-offset-background focus-visible:ring-ring not-first:hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 inline-flex h-8 w-8 cursor-pointer items-center justify-center gap-2 rounded-full border text-center text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
@@ -170,7 +160,12 @@
       {#if showExistingFolders}
         <FolderListAlt {selectedFolder} bind:showExistingFolders bind:resize />
       {:else}
-        <FolderList {selectedFolder} bind:showEmojiOptions bind:resize />
+        <FolderList
+          {selectedFolder}
+          bind:showEmojiOptions
+          bind:resize
+          bind:showExistingFolders
+        />
       {/if}
     </div>
     <div class="relative h-50">

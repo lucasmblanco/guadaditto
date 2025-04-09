@@ -3,7 +3,7 @@
     "message": "Save Youtube links to watch later without having to open many tabs at once."
   },
   "input_placeholder": {
-    "message": "Not on a YouTube video page"
+    "message": "Use button next to video or open it"
   },
   "homepage_empty": {
     "message": "So empty..."
@@ -42,5 +42,8 @@
   },
   "button_back": {
     "message": "Back to homepage"
+  },
+  "input_added": {
+    "message": "Video added!"
   }
 }

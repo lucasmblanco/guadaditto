@@ -56,13 +56,6 @@
   };
 
   onMount(async () => {
-    // chrome.storage.local.get(["lang"], (data) => {
-    //   if (data.lang) {
-    //     locale.lang = data.lang;
-    //   } else {
-    //     chrome.storage.local.set({ lang: "en" });
-    //   }
-    // });
     fetchTabData();
   });
 
@@ -83,10 +76,17 @@
       lastElement.scrollIntoView({ behavior: "smooth" });
 
       await updateNotificationBadge(db);
+      enableSubmit = false;
+      title = getAddedMessage();
     } catch (error) {
       console.error("Error adding video", error);
     }
   };
+
+  function getAddedMessage() {
+    const message = chrome.i18n.getMessage("input_added");
+    return message;
+  }
 </script>
 
 <header
@@ -131,7 +131,7 @@
         name="url"
         type="text"
         placeholder={chrome.i18n.getMessage("input_placeholder")}
-        class="border-accent-ditto bg-primary-ditto ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring col-span-4 flex h-8 w-full rounded-full border px-2 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        class="border-accent-ditto bg-primary-ditto ring-offset-background file:text-foreground placeholder:text-muted-foreground focus-visible:ring-ring text-xxs col-span-4 flex h-8 w-full rounded-full border px-2 py-2 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
       />
       <div class="flex gap-2">
         <button

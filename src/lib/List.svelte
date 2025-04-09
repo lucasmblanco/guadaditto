@@ -6,6 +6,7 @@
   import { flip } from "svelte/animate";
   import { slide } from "svelte/transition";
   import type { SelectedFolder } from "../types";
+  import { updateNotificationBadge } from "../utils/utils";
 
   let {
     selectedFolder = $bindable(),
@@ -62,11 +63,18 @@
     <button
       title={chrome.i18n.getMessage("button_delete_folder")}
       class="sticky -bottom-1 left-1/2 mt-1 w-fit -translate-x-1/2 transform rounded-t-full bg-red-400 p-2 text-black saturate-50 hover:saturate-100"
-      onclick={() => {
-        checkedDefault = true;
-        db.folders.where("id").equals(selectedFolder.id!).delete();
-        selectedFolder.id = null;
-        selectedFolder.name = "";
+      onclick={async () => {
+        try {
+          await db.transaction("rw", db.folders, db.videos, async () => {
+            await db.folders.delete(selectedFolder.id!);
+          });
+          await updateNotificationBadge(db);
+          checkedDefault = true;
+          selectedFolder.id = null;
+          selectedFolder.name = "";
+        } catch (error) {
+          console.error("Error deleting folder", error);
+        }
       }}
     >
       <Trash2 size={15} />

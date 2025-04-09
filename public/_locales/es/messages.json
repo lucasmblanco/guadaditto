@@ -2,8 +2,9 @@
   "extensionDescription": {
     "message": "Guardá links de Youtube para verlos después sin tener que abrir muchas pestañas a la vez."
   },
+
   "input_placeholder": {
-    "message": "No estás en una página de video de YouTube"
+    "message": "Usa el botón junto al video o ábrelo"
   },
   "homepage_empty": {
     "message": "Tan vacío..."
@@ -42,5 +43,8 @@
   },
   "button_back": {
     "message": "Volver a la página principal"
+  },
+  "input_added": {
+    "message": "Video agregado!"
   }
 }

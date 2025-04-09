@@ -1,0 +1,50 @@
+{
+  "extensionDescription": {
+    "message": "Guardá links de Youtube para verlos después sin tener que abrir muchas pestañas a la vez."
+  },
+
+  "input_placeholder": {
+    "message": "Usa el botón junto al video o ábrelo"
+  },
+  "homepage_empty": {
+    "message": "Tan vacío..."
+  },
+  "settings_import": {
+    "message": "Importar base de datos"
+  },
+  "settings_export": {
+    "message": "Exportar base de datos"
+  },
+  "button_create_folder": {
+    "message": "Crear carpeta"
+  },
+  "button_no_folder": {
+    "message": "Filtrado por: sin asignar"
+  },
+  "button_with_folder": {
+    "message": "Filtrado por: $1",
+    "placeholders": {
+      "folder": {
+        "content": "$1"
+      }
+    }
+  },
+  "button_delete_folder": {
+    "message": "Eliminar carpeta"
+  },
+  "button_settings": {
+    "message": "Ir a configuración"
+  },
+  "button_assign_folder": {
+    "message": "Seleccionar carpeta"
+  },
+  "button_add_video": {
+    "message": "Agregar video"
+  },
+  "button_back": {
+    "message": "Volver a la página principal"
+  },
+  "input_added": {
+    "message": "Video agregado!"
+  }
+}

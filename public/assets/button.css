@@ -13,7 +13,6 @@ button.g-button {
   outline: inherit;
   border: 1px solid transparent;
   border-radius: 50%;
-  /* */
   position: absolute;
   right: 0;
   bottom: 0;
@@ -21,8 +20,10 @@ button.g-button {
   width: fit-content;
   width: 40px;
   height: 40px;
-  /* padding-inline: 1rem;
-  padding-block: 0.75rem; */
+  /* 
+  padding-inline: 1rem;
+  padding-block: 0.75rem; 
+  */
 }
 
 button.g-button:hover {

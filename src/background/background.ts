@@ -27,6 +27,10 @@ db.version(2)
       });
   });
 
+db.folders.hook("deleting", async (primKey, folder, transaction) => {
+  await transaction.table("videos").where("folder_id").equals(primKey).delete();
+});
+
 chrome.runtime.onMessage.addListener((message) => {
   if (message.action === "openPopup") {
     chrome.storage.local.set(

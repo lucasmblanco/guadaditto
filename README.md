@@ -1,4 +1,4 @@
-<h1>Guardaditto</h1>
+<h1 align="center">Guardaditto</h1>
 
 ![image](https://i.imgur.com/qrlDIOd.png)
 

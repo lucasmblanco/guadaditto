@@ -1,6 +1,6 @@
 <h1>Guardaditto</h1>
 
-![guardaditto banner](https://imgur.com/a/3EM8Dle)
+![image](https://i.imgur.com/qrlDIOd.png)
 
 Guadaditto surge como respuesta a dos preguntas: ¿Cómo funcionan las extensiones? y ¿Por qué tengo tantas pestañas abiertas con videos de YouTube que necesito ver?
 

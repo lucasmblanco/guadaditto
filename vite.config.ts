@@ -4,6 +4,9 @@ import tailwindcss from "@tailwindcss/vite";
 import path, { resolve } from "path";
 
 export default defineConfig({
+  define: {
+    __APP_VERSION__: JSON.stringify(require("./package.json").version),
+  },
   plugins: [tailwindcss(), svelte()],
   resolve: {
     extensions: [".ts", ".tsx", ".json", ".svelte"],

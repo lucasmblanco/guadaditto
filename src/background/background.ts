@@ -27,6 +27,11 @@ db.version(2)
       });
   });
 
+db.version(3).stores({
+  videos:
+    "++id, title, &url, created_at, folder_id, playlist_url, has_been_viewed",
+});
+
 db.folders.hook("deleting", async (primKey, folder, transaction) => {
   await transaction.table("videos").where("folder_id").equals(primKey).delete();
 });

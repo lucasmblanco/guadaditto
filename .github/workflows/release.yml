@@ -55,7 +55,7 @@ jobs:
       - name: Update package.json and manifest.json
         run: |
           # Actualizar package.json
-          pnpm pkg set version=${{ steps.semantic_version.outputs.version} }
+          pnpm pkg set version=${{ steps.semantic_version.outputs.version }}
 
           # Ejecutar script para actualizar manifest.json
           node -e "
@@ -73,7 +73,7 @@ jobs:
           git commit -m "chore: bump version to ${{ steps.semantic_version.outputs.version }}"
 
           # Push explícitamente a la rama actual
-          git push origin $CURRENT_BRANCH
+          git push origin HEAD
 
       - name: Build project
         run: pnpm run build
@@ -107,8 +107,8 @@ jobs:
 
       - name: Update CHANGELOG & update develop branch
         run: |
-          git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
-          git config --global user.email "${{ env.CI_COMMIT_AUTHOR }}"
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
           changelog='${{ steps.build_changelog.outputs.changelog }}'
           escaped_changelog=$(printf '%s\n' "$changelog" | sed 's/\\/&&/g;s/^[[:blank:]]/\\&/;s/$/\\/')
           sed -i "2i ${escaped_changelog%?}" CHANGELOG.md

@@ -1,7 +1,6 @@
 <script lang="ts">
   import { db } from "../background/background";
   import { exportDB, importInto } from "dexie-export-import";
-  import { VERSION } from "../version";
   import { updateNotificationBadge } from "../utils/utils";
 
   const options = {
@@ -61,7 +60,8 @@
 </main>
 <foooter class="flex justify-center opacity-20 select-none"
   ><span class="font-main"
-    >guardaditto <span class="font-secondary">{`v${VERSION} @ 2025`}</span
+    >guardaditto <span class="font-secondary"
+      >{`v${__APP_VERSION__} @ 2025`}</span
     ></span
   ></foooter
 >

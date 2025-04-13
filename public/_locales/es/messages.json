@@ -46,5 +46,8 @@
   },
   "input_added": {
     "message": "Video agregado!"
+  },
+  "video_exists": {
+    "message": "El video ya existe!"
   }
 }

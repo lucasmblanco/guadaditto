@@ -1,7 +1,13 @@
 <script lang="ts">
   import FolderList from "./lib/FolderList.svelte";
   import FolderListAlt from "./lib/FolderListAlt.svelte";
-  import { FolderInput, BadgePlus, Settings, ChevronLeft } from "lucide-svelte";
+  import {
+    FolderInput,
+    BadgePlus,
+    Settings,
+    ChevronLeft,
+    Info,
+  } from "lucide-svelte";
   import { db } from "./background/background";
   import List from "./lib/List.svelte";
   import EmojiList from "./lib/EmojiList.svelte";
@@ -16,6 +22,8 @@
   } from "./utils/utils";
   import SettingsPage from "./lib/SettingsPage.svelte";
   import type { SelectedFolder } from "./types";
+  import { Toaster, toast } from "svelte-sonner";
+  import CustomToast from "./lib/CustomToast.svelte";
 
   let showExistingFolders = $state(false);
   let showEmojiOptions = $state(false);
@@ -62,13 +70,15 @@
   const handleSubmit = async (e: Event) => {
     e.preventDefault();
     try {
-      await db.videos.add({
-        title,
-        folder_id: selectedFolder ? selectedFolder.id : null,
-        url,
-        created_at: new Date(),
-        playlist_url,
-        has_been_viewed: false,
+      await db.transaction("rw", db.videos, async () => {
+        await db.videos.add({
+          title,
+          folder_id: selectedFolder ? selectedFolder.id : null,
+          url,
+          created_at: new Date(),
+          playlist_url,
+          has_been_viewed: false,
+        });
       });
 
       const listVideoElements = document.querySelectorAll("ul>li");
@@ -79,7 +89,12 @@
       enableSubmit = false;
       title = getAddedMessage();
     } catch (error) {
-      console.error("Error adding video", error);
+      if (error instanceof Error && error.name === "ConstraintError") {
+        toast.custom(CustomToast as any);
+        return;
+      } else {
+        console.error("Error adding video", error);
+      }
     }
   };
 
@@ -90,7 +105,9 @@
 </script>
 
 <header
-  class="p flex {openSettings ? 'justify-start' : 'justify-end'} px-2 pt-2"
+  class="p flex {openSettings
+    ? 'justify-start'
+    : 'justify-end'} z-100 px-2 pt-2"
 >
   {#if openSettings}
     <button
@@ -107,7 +124,7 @@
     >
   {/if}
 </header>
-<main class="p-3 pt-0 transition-all">
+<main class="z-50 p-3 pt-0 transition-all">
   <div class="flex flex-col items-center justify-center text-center">
     <img
       src="/g-logo.svg"
@@ -179,3 +196,12 @@
     <SettingsPage />
   {/if}
 </main>
+<Toaster
+  position="top-center"
+  toastOptions={{
+    unstyled: true,
+    classes: {
+      toast: "pointer-events-none",
+    },
+  }}
+/>

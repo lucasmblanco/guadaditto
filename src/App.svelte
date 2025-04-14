@@ -154,7 +154,7 @@
           onclick={() => {
             showExistingFolders = !showExistingFolders;
           }}
-          class="font-emoji inline-flex h-8 w-8 items-center justify-center border {showExistingFolders
+          class=" inline-flex h-8 w-8 items-center justify-center border {showExistingFolders
             ? 'bg-primary-ditto'
             : ''} border-accent-ditto ring-offset-background focus-visible:ring-ring hover:bg-accent hover:text-accent-foreground hover:bg-primary-ditto active:bg-primary-ditto/150 cursor-pointer gap-2 rounded-full text-center text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none active:text-white disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:bg-transparent [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
         >

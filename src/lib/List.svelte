@@ -51,7 +51,7 @@
           strokeWidth={2}
           absoluteStrokeWidth={true}
         />
-        <p class="text-accent-ditto font-main text-base italic select-none">
+        <p class="text-accent-ditto font-primary text-base italic select-none">
           {chrome.i18n.getMessage("homepage_empty")}
         </p>
       </div>

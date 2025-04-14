@@ -87,7 +87,7 @@
     {#if $folders && $folders.length > 0}
       {#each $folders as folder (folder.id)}
         <label
-          class="ring-offset-background font-emoji focus-visible:ring-ring // hover:bg-primary-ditto active:bg-primary-ditto/150 inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
+          class="ring-offset-background focus-visible:ring-ring // hover:bg-primary-ditto active:bg-primary-ditto/150 inline-flex h-10 w-10 items-center justify-center gap-2 rounded-full text-lg font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0"
           for={folder.name}
           ><input
             onclick={() =>

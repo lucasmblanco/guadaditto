@@ -1,6 +1,6 @@
 <script lang="ts">
   import { slide } from "svelte/transition";
-  import emojiData from "../data/emojiList.json";
+  import emojiData from "../data/emoji.json";
   import { db } from "../background/background";
 
   let { showEmojiOptions = $bindable(), resize = $bindable() } = $props();
@@ -9,7 +9,7 @@
     {};
   let activeCategory = $state("Smileys & Emotion");
 
-  emojiData["emojis"].forEach((emoji) => {
+  emojiData.forEach((emoji) => {
     if (emoji.category === "Component") return;
     if (!emojisCat[emoji.category]) {
       emojisCat[emoji.category] = [];
@@ -53,7 +53,7 @@
           <button
             onclick={createFolder}
             value={emoji.emoji}
-            class=" font-emoji hover: h-8 w-full self-center rounded-full text-center hover:backdrop-saturate-200"
+            class="hover: h-8 w-full self-center rounded-full text-center hover:backdrop-saturate-200"
             >{emoji.emoji}</button
           >
         {/each}

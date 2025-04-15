@@ -32,7 +32,6 @@
 </script>
 
 <div class="absolute top-0 left-0 h-full" transition:slide>
-  <!-- <div class="grid h-12 w-full grid-cols-11 items-center gap-2 overflow-y-auto"> -->
   <div class="flex pb-2">
     {#each Object.keys(emojisCat) as category}
       <button

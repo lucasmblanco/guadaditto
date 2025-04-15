@@ -1,6 +1,6 @@
 import Dexie, { type EntityTable } from "dexie";
 import type { Video, Folder } from "../models";
-import { updateNotificationBadge } from "../utils/utils";
+import { initializeBadge } from "../utils/utils";
 
 const db = new Dexie("GuardadittoDatabase") as Dexie & {
   videos: EntityTable<Video, "id">;
@@ -65,9 +65,12 @@ chrome.runtime.onMessage.addListener((message) => {
   */
 });
 
+chrome.runtime.onInstalled.addListener(async function () {
+  await initializeBadge(db);
+});
+
 chrome.runtime.onStartup.addListener(async function () {
-  chrome.action.setBadgeBackgroundColor({ color: "#68f2b2" });
-  await updateNotificationBadge(db);
+  await initializeBadge(db);
 });
 
 export { db };

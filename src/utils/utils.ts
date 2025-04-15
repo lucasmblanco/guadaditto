@@ -1,5 +1,6 @@
 import type { db } from "../background/background";
 import type { Folder } from "../models";
+import type { GuardadittoDB } from "../types";
 
 /**
  * @deprecated This function is deprecated and will be removed in future versions.
@@ -89,4 +90,9 @@ export function getYoutubePlaylistLink(url: string): string | null {
   if (!playlistId) return null;
 
   return `https://www.youtube.com/playlist?list=${playlistId}`;
+}
+
+export async function initializeBadge(db: GuardadittoDB) {
+  chrome.action.setBadgeBackgroundColor({ color: "#68f2b2" });
+  await updateNotificationBadge(db);
 }

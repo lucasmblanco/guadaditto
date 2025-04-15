@@ -10,20 +10,13 @@
   src: url("../static/fonts/Inter-VariableFont.ttf") format("truetype");
 }
 
-@font-face {
-  font-family: "Noto Color Emoji";
-  src: url(../static/fonts/NotoColorEmoji-Regular.ttf) format("truetype");
-  font-display: swap;
-}
-
 @theme {
   --color-bg-ditto: #202020;
   --color-primary-ditto: #392443;
   --color-accent-ditto: #774b8a;
   --color-accent-bg-ditto: #424040;
-  --font-main: "HankenGroteskExtraBoldItalic", sans-serif;
+  --font-primary: "HankenGroteskExtraBoldItalic", sans-serif;
   --font-secondary: "Inter", sans-serif;
-  --font-emoji: "Noto Color Emoji", sans-serif;
 }
 
 :root {

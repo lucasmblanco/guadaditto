@@ -59,7 +59,7 @@
   </ul>
 </main>
 <foooter class="flex justify-center opacity-20 select-none"
-  ><span class="font-main"
+  ><span class="font-primary"
     >guardaditto <span class="font-secondary"
       >{`v${__APP_VERSION__} @ 2025`}</span
     ></span

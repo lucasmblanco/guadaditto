@@ -1,4 +1,13 @@
 # Changelog
+## v0.5.1 - 16-04-2025
+## 📦 Uncategorized
+
+- added fix to notification when extension is updated
+   - PR: #72
+- Notification Fix when app is updated
+   - PR: #73
+
+
 ## v0.5.0 - 15-04-2025
 ## 📦 Uncategorized
 

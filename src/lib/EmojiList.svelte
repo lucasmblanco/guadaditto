@@ -31,7 +31,7 @@
   }
 </script>
 
-<div class="absolute top-0 left-0 h-full w-full" transition:slide>
+<div class="absolute top-0 left-0 h-full" transition:slide>
   <div class="flex pb-2">
     {#each Object.keys(emojisCat) as category}
       <button

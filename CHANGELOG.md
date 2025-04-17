@@ -1,4 +1,11 @@
 # Changelog
+## v0.5.2 - 17-04-2025
+## 📦 Uncategorized
+
+- Minor ui fixes
+   - PR: #74
+
+
 ## v0.5.1 - 16-04-2025
 ## 📦 Uncategorized
 

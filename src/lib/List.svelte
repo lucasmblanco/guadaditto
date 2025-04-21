@@ -64,7 +64,7 @@
       <div class="absolute bottom-1 left-1/2 z-20 -translate-x-1/2">
         <button
           title={chrome.i18n.getMessage("button_delete_folder")}
-          class=" right-4 bottom-4 z-10 mb-2 flex w-fit items-center justify-center rounded-full bg-red-500 p-2 text-black saturate-50 hover:saturate-100 focus:ring-2 focus:outline-none"
+          class=" right-4 bottom-4 z-10 mb-2 flex w-fit items-center justify-center rounded-full bg-red-500 p-2 text-black saturate-50 hover:saturate-100"
           onclick={async () => {
             try {
               await db.transaction("rw", db.folders, db.videos, async () => {

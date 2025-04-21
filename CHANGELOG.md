@@ -1,4 +1,11 @@
 # Changelog
+## v0.5.5 - 21-04-2025
+## 📦 Uncategorized
+
+- Minor tweak on workflow file
+   - PR: #80
+
+
 ## v0.5.4 - 21-04-2025
 
 <details>

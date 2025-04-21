@@ -89,6 +89,34 @@ jobs:
       - name: "Build Changelog"
         id: build_changelog
         uses: mikepenz/release-changelog-builder-action@v5
+        configuration: |
+          {
+            "categories": [
+          {
+            "title": "## 🚀 Features",
+            "labels": ["feature", "enhancement", "feat"],
+            "commits": ["^feat"]
+          },
+          {
+            "title": "## 🐛 Fixes",
+            "labels": ["fix", "bug"],
+            "commits": ["^fix"]
+          },
+          {
+            "title": "## 📝 Documentation",
+            "labels": ["documentation", "docs"],
+            "commits": ["^docs"]
+          },
+          {
+            "title": "## 🧹 Chores",
+            "labels": ["chore"],
+            "commits": ["^chore"]
+          }
+          ],
+          "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+          "pr_template": "- {{TITLE}}\n   - PR: #{{NUMBER}}",
+          "empty_template": "- No changes"
+          }
         with:
           fromTag: v${{ steps.semantic_version.outputs.previous_version }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}

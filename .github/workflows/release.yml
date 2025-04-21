@@ -88,8 +88,9 @@ jobs:
 
       - name: "Build Changelog"
         id: build_changelog
-        uses: mikepenz/release-changelog-builder-action@v5
-        configuration: |
+        uses: mikepenz/release-changelog-builder-action@v5        
+        with:
+          configurationJson: |
           {
             "categories": [
           {
@@ -117,7 +118,6 @@ jobs:
           "pr_template": "- {{TITLE}}\n   - PR: #{{NUMBER}}",
           "empty_template": "- No changes"
           }
-        with:
           fromTag: v${{ steps.semantic_version.outputs.previous_version }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}
 

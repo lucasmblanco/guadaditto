@@ -105,7 +105,7 @@ jobs:
           commit: ${{ steps.semantic_version.outputs.current_commit }}
           artifacts: ${{ env.RELEASE_NAME }}
 
-      - name: Update or Create CHANGELOGG
+      - name: Update or Create CHANGELOG
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"

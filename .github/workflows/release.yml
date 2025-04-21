@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+
 jobs:
   version:
     runs-on: ubuntu-latest
@@ -54,10 +55,7 @@ jobs:
 
       - name: Update package.json and manifest.json
         run: |
-          # Actualizar package.json
           pnpm pkg set version=${{ steps.semantic_version.outputs.version }}
-
-          # Ejecutar script para actualizar manifest.json
           node -e "
           const fs = require('fs');
           const manifest = JSON.parse(fs.readFileSync('./public/manifest.json', 'utf8'));
@@ -71,8 +69,6 @@ jobs:
           git config --global user.email "actions@github.com"
           git add package.json public/manifest.json
           git commit -m "chore: bump version to ${{ steps.semantic_version.outputs.version }}"
-
-          # Push explícitamente a la rama actual
           git push origin HEAD
 
       - name: Build project
@@ -88,36 +84,36 @@ jobs:
 
       - name: "Build Changelog"
         id: build_changelog
-        uses: mikepenz/release-changelog-builder-action@v5        
+        uses: mikepenz/release-changelog-builder-action@v5
         with:
           configurationJson: |
-          {
-            "categories": [
-          {
-            "title": "## 🚀 Features",
-            "labels": ["feature", "enhancement", "feat"],
-            "commits": ["^feat"]
-          },
-          {
-            "title": "## 🐛 Fixes",
-            "labels": ["fix", "bug"],
-            "commits": ["^fix"]
-          },
-          {
-            "title": "## 📝 Documentation",
-            "labels": ["documentation", "docs"],
-            "commits": ["^docs"]
-          },
-          {
-            "title": "## 🧹 Chores",
-            "labels": ["chore"],
-            "commits": ["^chore"]
-          }
-          ],
-          "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
-          "pr_template": "- {{TITLE}}\n   - PR: #{{NUMBER}}",
-          "empty_template": "- No changes"
-          }
+            {
+              "categories": [
+                {
+                  "title": "## 🚀 Features",
+                  "labels": ["feature", "enhancement", "feat"],
+                  "commits": ["^feat"]
+                },
+                {
+                  "title": "## 🐛 Fixes",
+                  "labels": ["fix", "bug"],
+                  "commits": ["^fix"]
+                },
+                {
+                  "title": "## 📝 Documentation",
+                  "labels": ["documentation", "docs"],
+                  "commits": ["^docs"]
+                },
+                {
+                  "title": "## 🧹 Chores",
+                  "labels": ["chore"],
+                  "commits": ["^chore"]
+                }
+              ],
+              "template": "#{{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n#{{UNCATEGORIZED}}\n</details>",
+              "pr_template": "- {{TITLE}}\n   - PR: #{{NUMBER}}",
+              "empty_template": "- No changes"
+            }
           fromTag: v${{ steps.semantic_version.outputs.previous_version }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}
 
@@ -144,7 +140,6 @@ jobs:
           fi
 
           changelog='${{ steps.build_changelog.outputs.changelog }}'
-          # Check if changelog content is not empty before attempting to insert
           if [ -n "$changelog" ]; then
             escaped_changelog=$(printf '%s\n' "$changelog" | sed 's/\\/&&/g;s/^[[:blank:]]/\\&/;s/$/\\/')
             sed -i "2i ${escaped_changelog%?}" CHANGELOG.md
@@ -153,13 +148,12 @@ jobs:
             echo "No changelog content generated."
           fi
 
-          # Check if CHANGELOG.md has changes before attempting to commit
           git add CHANGELOG.md
           if ! git diff --staged --quiet; then
             echo "CHANGELOG.md has changes, committing..."
             git commit -m "chore(docs): update CHANGELOG.MD"
             git push origin main
-            git push --force origin main:dev # Be careful with force push
+            git push --force origin main:dev
           else
             echo "No changes detected in CHANGELOG.md, skipping commit."
           fi

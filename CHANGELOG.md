@@ -1,4 +1,13 @@
 # Changelog
+## v0.5.4 - 21-04-2025
+
+<details>
+<summary>Uncategorized</summary>
+
+- {{TITLE}}
+   - PR: 79
+
+</details>
 ## v0.5.3 - 21-04-2025
 
 <details>

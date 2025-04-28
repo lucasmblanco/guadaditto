@@ -7,11 +7,9 @@
   "action": {
     "default_popup": "index.html"
   },
-  "permissions": [
-    "storage",
-    "activeTab"
-  ],
+  "permissions": ["storage", "activeTab"],
   "background": {
+    "scripts": ["background.js"],
     "service_worker": "background.js",
     "type": "module"
   },
@@ -22,13 +20,9 @@
         "https://www.youtube.com/feed/subscriptions",
         "https://www.youtube.com/watch?*"
       ],
-      "js": [
-        "script.js"
-      ],
+      "js": ["script.js"],
       "run_at": "document_start",
-      "css": [
-        "assets/button.css"
-      ]
+      "css": ["assets/button.css"]
     }
   ],
   "icons": {
@@ -39,12 +33,8 @@
   },
   "web_accessible_resources": [
     {
-      "resources": [
-        "icons/*"
-      ],
-      "matches": [
-        "<all_urls>"
-      ]
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
     }
   ]
 }

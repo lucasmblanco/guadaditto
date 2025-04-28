@@ -1,6 +1,7 @@
 import Dexie, { type EntityTable } from "dexie";
 import type { Video, Folder } from "../models";
 import { initializeBadge } from "../utils/utils";
+import browser from "webextension-polyfill";
 
 const db = new Dexie("GuardadittoDatabase") as Dexie & {
   videos: EntityTable<Video, "id">;
@@ -37,6 +38,21 @@ db.folders.hook("deleting", async (primKey, folder, transaction) => {
 });
 
 chrome.runtime.onMessage.addListener((message) => {
+  const isFirefox =
+    navigator.userAgent.includes("Firefox") ||
+    navigator.userAgent.includes("Gecko");
+
+  try {
+    if (isFirefox) {
+      // Método para Firefox
+      browser.browserAction.openPopup();
+    } else {
+      // Método para Chrome
+      chrome.action.openPopup().catch(() => {});
+    }
+  } catch (error) {
+    console.error("Error al abrir el popup:", error);
+  }
   if (message.action === "openPopup") {
     chrome.storage.local.set(
       { videoUrl: message.url, videoTitle: message.title },
@@ -52,7 +68,7 @@ chrome.runtime.onMessage.addListener((message) => {
        },
       */
     );
-    chrome.action.openPopup().catch(() => {});
+    // chrome.action.openPopup().catch(() => {});
   }
 
   /* 

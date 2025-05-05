@@ -2,6 +2,7 @@ import {
   YOUTUBE_VIDEOS_CONTAINER,
   YOUTUBE_VIDEO_INFO_CONTAINER,
 } from "../constants";
+import browser from "webextension-polyfill";
 
 function elementMatchesSelectors(element: HTMLElement) {
   const selectors = [
@@ -87,9 +88,10 @@ function createButton(target: HTMLElement) {
       button.appendChild(img);
       container.appendChild(button);
 
-      button.addEventListener("click", (e) =>
-        addOpenPopupFunctionality(e, container),
-      );
+      button.addEventListener("click", (e) => {
+        browser.action.openPopup();
+        addOpenPopupFunctionality(e, container);
+      });
     }
   });
 }
@@ -107,7 +109,7 @@ function addOpenPopupFunctionality(e: MouseEvent, container: HTMLElement) {
       ? titleElement.textContent.trim()
       : "Unknown Title";
   if (videoUrl) {
-    /* 
+    /*
 
     Previous implementation, creates an error when the user try to open the popup again after closing it by clicking anywhere in the page.
     The error: the user needs to click the button two times because "popupIsOpen" is never set to false.
@@ -117,7 +119,7 @@ function addOpenPopupFunctionality(e: MouseEvent, container: HTMLElement) {
      chrome.storage.local.get("popupIsOpen", (result) => {
        if (!result.popupIsOpen) {
          chrome.runtime.sendMessage({
-           action: "openPopup",
+           action: "openPopup",    browser.action.openPopup();
            url: videoUrl,
            title: videoTitle,
          });
@@ -126,11 +128,10 @@ function addOpenPopupFunctionality(e: MouseEvent, container: HTMLElement) {
        }
      });
     */
-
-    chrome.runtime.sendMessage({
-      action: "openPopup",
-      url: videoUrl,
-      title: videoTitle,
-    });
+    // chrome.runtime.sendMessage({
+    //   action: "openPopup",
+    //   url: videoUrl,
+    //   title: videoTitle,
+    // });
   }
 }

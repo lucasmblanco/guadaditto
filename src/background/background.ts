@@ -38,40 +38,42 @@ db.folders.hook("deleting", async (primKey, folder, transaction) => {
 });
 
 chrome.runtime.onMessage.addListener((message) => {
-  const isFirefox =
-    navigator.userAgent.includes("Firefox") ||
-    navigator.userAgent.includes("Gecko");
+  // const isFirefox =
+  //   navigator.userAgent.includes("Firefox") ||
+  //   navigator.userAgent.includes("Gecko");
 
-  try {
-    if (isFirefox) {
-      // Método para Firefox
-      browser.browserAction.openPopup();
-    } else {
-      // Método para Chrome
-      chrome.action.openPopup().catch(() => {});
-    }
-  } catch (error) {
-    console.error("Error al abrir el popup:", error);
-  }
   if (message.action === "openPopup") {
     chrome.storage.local.set(
       { videoUrl: message.url, videoTitle: message.title },
-      /* 
+      /*
 
       Previous implementation, creates an error when the user try to open the popup again after closing it by clicking anywhere in the page.
       The error: the user needs to click the button two times because "popupIsOpen" is never set to false.
       I try using onDestroy (on App.svelte) and onSuspend (on background.ts) but it doesn't work.
-      
+
        () => {
          chrome.storage.local.set({ popupIsOpen: true });
         chrome.action.openPopup();
        },
       */
     );
-    // chrome.action.openPopup().catch(() => {});
+
+    // try {
+    //   if (isFirefox) {
+    //     // Método para Firefox
+    //     browser.action.openPopup();
+    //   } else {
+    //     // Método para Chrome
+    //     chrome.action.openPopup().catch(() => {});
+    //   }
+    // } catch (error) {
+    //   console.error("Error al abrir el popup:", error);
+    // }
+
+    chrome.action.openPopup().catch(() => {});
   }
 
-  /* 
+  /*
 
   Part of previous implementation.
 
